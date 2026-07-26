@@ -205,6 +205,27 @@ a{color:inherit}
 .ca-label{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
 .ca-value{font-family:var(--font-mono);font-size:13px;word-break:break-all;flex:1;min-width:200px;text-align:left}
 
+/* ---------- LIVE DATA STRIP ---------- */
+.live{max-width:680px;margin:20px auto 0;border:2px solid var(--ink);text-align:left}
+.live-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:rgba(23,20,15,.24)}
+@media (max-width:560px){.live-grid{grid-template-columns:repeat(2,1fr)}}
+.live-cell{background:var(--paper);padding:13px 12px;text-align:center}
+.live-k{
+  display:block;font-family:var(--font-mono);font-size:10px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;
+}
+.live-v{display:block;font-family:var(--font-display);font-size:19px;line-height:1.15;word-break:break-word}
+.live-bar{height:9px;background:var(--paper-deep);border-top:2px solid var(--ink);overflow:hidden}
+.live-bar i{display:block;height:100%;width:0;background:var(--flash);transition:width .6s ease}
+.live-foot{
+  margin:0;padding:9px 12px;border-top:2px solid rgba(23,20,15,.24);
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-soft);text-align:center;line-height:1.5;
+}
+.live.is-waiting .live-bar,.live.is-error .live-bar{display:none}
+.live.is-error .live-foot{color:var(--flash)}
+
+
 /* ---------- MARQUEE ---------- */
 .ribbon{position:relative;z-index:1;background:var(--ink);color:var(--paper);padding-block:14px;margin-block:clamp(30px,6vw,60px);overflow:hidden;border-block:3px solid var(--ink)}
 .ribbon-track{display:flex;width:max-content;animation:slide 34s linear infinite}
@@ -399,6 +420,17 @@ a{color:inherit}
     <span class="ca-label">Contract</span>
     <span class="ca-value" id="ca-value">0x0000000000000000000000000000000000000000</span>
     <button class="btn btn-ghost btn-sm" id="copy-btn" type="button">Copy</button>
+  </div>
+
+  <div class="live is-waiting" id="live" role="status" aria-live="polite">
+    <div class="live-grid">
+      <div class="live-cell"><span class="live-k">Market cap</span><span class="live-v" id="lv-mcap">&mdash;</span></div>
+      <div class="live-cell"><span class="live-k">Price</span><span class="live-v" id="lv-price">&mdash;</span></div>
+      <div class="live-cell"><span class="live-k">Curve</span><span class="live-v" id="lv-curve">&mdash;</span></div>
+      <div class="live-cell"><span class="live-k">Status</span><span class="live-v" id="lv-status">&mdash;</span></div>
+    </div>
+    <div class="live-bar"><i id="lv-fill"></i></div>
+    <p class="live-foot" id="lv-foot">Not launched yet &mdash; the numbers appear here the moment $BULL is live</p>
   </div>
 </header>
 
@@ -854,6 +886,130 @@ a{color:inherit}
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
   update();
+})();
+</script>
+<script>
+/* ------------------------------------------------------------------------
+   Live numbers, read straight from InkyPump.
+
+   The contract address is read from the #ca-value element above, so there is
+   only ONE place in this file to change it.
+
+   API: GET https://inkypump.com/api/token?address=0x...
+   That path is the one InkyPump documents for its Ink deployment. If the
+   Robinhood Chain deployment answers on a different path, change API_BASE.
+   If the browser is blocked by CORS, the strip says so and you can point
+   API_BASE at a small proxy of your own instead.
+   ------------------------------------------------------------------------ */
+(function(){
+  var API_BASE = 'https://inkypump.com/api/token';
+  var REFRESH_MS = 30000;
+  var PLACEHOLDER = /^0x0+$/i;
+
+  var box = document.getElementById('live');
+  if(!box) return;
+
+  var el = {
+    mcap: document.getElementById('lv-mcap'),
+    price: document.getElementById('lv-price'),
+    curve: document.getElementById('lv-curve'),
+    status: document.getElementById('lv-status'),
+    fill: document.getElementById('lv-fill'),
+    foot: document.getElementById('lv-foot')
+  };
+  var caEl = document.getElementById('ca-value');
+  var address = caEl ? caEl.textContent.trim() : '';
+  var lastOk = 0;
+  var timer = null;
+
+  function setState(name){
+    box.className = 'live' + (name ? ' is-' + name : '');
+  }
+  function dash(){
+    el.mcap.textContent = el.price.textContent = '\u2014';
+    el.curve.textContent = el.status.textContent = '\u2014';
+  }
+
+  /* small numbers without exponent notation */
+  function fmtEth(v){
+    if(typeof v !== 'number' || !isFinite(v)) return '\u2014';
+    if(v === 0) return '0';
+    if(v >= 100) return v.toFixed(1).replace(/\.?0+$/, '');
+    if(v >= 1) return v.toFixed(3).replace(/\.?0+$/, '');
+    if(v >= 0.001) return v.toFixed(6).replace(/0+$/, '');
+    return v.toFixed(12).replace(/0+$/, '');
+  }
+
+  function ago(ms){
+    var sec = Math.round((Date.now() - ms) / 1000);
+    if(sec < 5) return 'just now';
+    if(sec < 60) return sec + 's ago';
+    return Math.round(sec / 60) + 'm ago';
+  }
+
+  function paint(t){
+    var prog = typeof t.funding_progress === 'number'
+      ? Math.max(0, Math.min(1, t.funding_progress)) : null;
+    var bonded = prog !== null && prog >= 1;
+
+    el.mcap.textContent = typeof t.market_cap === 'number' ? fmtEth(t.market_cap) + ' ETH' : '\u2014';
+    el.price.textContent = typeof t.price_eth === 'number' ? fmtEth(t.price_eth) : '\u2014';
+    el.curve.textContent = prog === null ? '\u2014' : (prog * 100).toFixed(1) + '%';
+    el.status.textContent = prog === null ? '\u2014' : (bonded ? 'Bonded' : 'On the curve');
+    el.fill.style.width = prog === null ? '0%' : (prog * 100) + '%';
+
+    lastOk = Date.now();
+    setState('live');
+    tickFoot();
+  }
+
+  function tickFoot(){
+    if(!lastOk) return;
+    el.foot.textContent = 'Live from InkyPump \u00b7 updated ' + ago(lastOk);
+  }
+
+  function load(){
+    if(!address || PLACEHOLDER.test(address)){
+      setState('waiting');
+      dash();
+      el.foot.textContent = 'Not launched yet \u2014 the numbers appear here the moment $BULL is live';
+      return;
+    }
+
+    fetch(API_BASE + '?address=' + encodeURIComponent(address), { headers: { 'accept': 'application/json' } })
+      .then(function(r){
+        if(r.status === 404) throw new Error('unknown');
+        if(!r.ok) throw new Error('http');
+        return r.json();
+      })
+      .then(function(t){
+        if(!t || typeof t !== 'object') throw new Error('shape');
+        paint(t);
+      })
+      .catch(function(err){
+        if(lastOk) return;               // keep the last good numbers on screen
+        setState('error');
+        dash();
+        el.foot.textContent = err.message === 'unknown'
+          ? 'InkyPump has no record of this address yet'
+          : 'Could not reach InkyPump from this page';
+      });
+  }
+
+  function schedule(){
+    clearInterval(timer);
+    timer = setInterval(function(){
+      if(!document.hidden) load();
+      tickFoot();
+    }, REFRESH_MS);
+  }
+
+  document.addEventListener('visibilitychange', function(){
+    if(!document.hidden) load();
+  });
+
+  load();
+  schedule();
 })();
 </script>
 </body>
