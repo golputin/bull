@@ -50,6 +50,11 @@
 
   --wrap:1120px;
   --gut:clamp(20px,5vw,48px);
+
+  /* driven by scroll, see the press script at the end of the file */
+  --halftone-y:0px;   /* parallax offset of the dot screen */
+  --drift:0;          /* 0 at the top of the page, 1 at the bottom */
+  --drift-hero:0;     /* 0 to 1 across the first screen only */
 }
 
 *{box-sizing:border-box}
@@ -66,18 +71,36 @@ body{
 
 /* ---------- BACKGROUND: press sheet, halftone, paper grain ---------- */
 body::before{
-  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  content:"";position:fixed;inset:-40px;z-index:0;pointer-events:none;
   background-image:
     radial-gradient(circle at 1px 1px, rgba(23,20,15,.16) 1px, transparent 1.4px),
     radial-gradient(circle at 1px 1px, rgba(217,52,43,.10) 1px, transparent 1.4px);
   background-size:14px 14px, 14px 14px;
   background-position:0 0, 7px 7px;
   opacity:.5;
+  /* the dot screen lags behind the page, so the sheet sits in front of you.
+     The shift wraps at one tile, so it never runs out of pattern. */
+  transform:translate3d(0,var(--halftone-y),0);
+  will-change:transform;
 }
 body::after{
-  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  content:"";position:fixed;inset:-160px;z-index:0;pointer-events:none;
   mix-blend-mode:multiply;opacity:.38;
+  /* one tile, jumped to a new position ~13 times a second: film grain boil */
+  animation:boil .62s steps(1,end) infinite;
+  will-change:transform;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23g)' opacity='.55'/%3E%3C/svg%3E");
+}
+
+@keyframes boil{
+  0%   {transform:translate3d(0,0,0)}
+  12.5%{transform:translate3d(-31px,17px,0)}
+  25%  {transform:translate3d(23px,-29px,0)}
+  37.5%{transform:translate3d(-19px,-11px,0)}
+  50%  {transform:translate3d(37px,13px,0)}
+  62.5%{transform:translate3d(-27px,31px,0)}
+  75%  {transform:translate3d(11px,-23px,0)}
+  87.5%{transform:translate3d(29px,7px,0)}
 }
 
 /* Registration marks, four corners */
@@ -113,6 +136,19 @@ a{color:inherit}
 }
 .stamp .plate-ink{position:relative;color:var(--ink)}
 
+/* The red plate wanders further out of registration as the page goes on.
+   Only the two large stamps drift; the nav and footer marks stay crisp. */
+.hero .stamp .plate-flash{
+  transform:translate(calc(-6px - 13px * var(--drift-hero)), calc(5px + 10px * var(--drift-hero)))
+            rotate(calc(-1.2deg - 2.1deg * var(--drift-hero)));
+  will-change:transform;
+}
+.join .stamp .plate-flash{
+  transform:translate(calc(-6px - 13px * var(--drift)), calc(5px + 10px * var(--drift)))
+            rotate(calc(-1.2deg - 2.1deg * var(--drift)));
+  will-change:transform;
+}
+
 /* ---------- NAV ---------- */
 .nav{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:22px 10px}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none}
@@ -124,7 +160,13 @@ a{color:inherit}
   letter-spacing:.16em;text-transform:uppercase;text-decoration:none;
   padding-bottom:3px;border-bottom:2px solid transparent;
 }
+.nav-links a{position:relative}
+.nav-links a::after{
+  content:"";position:absolute;left:0;right:0;bottom:-3px;height:3px;
+  background:var(--flash);filter:blur(2.5px);opacity:0;transition:opacity .18s ease;
+}
 .nav-links a:hover{border-bottom-color:var(--flash)}
+.nav-links a:hover::after{opacity:.85}
 @media (max-width:900px){.nav-links a:not(.btn){display:none}}
 
 /* ---------- BUTTONS ---------- */
@@ -136,10 +178,12 @@ a{color:inherit}
   cursor:pointer;transition:transform .12s ease, box-shadow .12s ease;
   box-shadow:4px 4px 0 var(--flash);
 }
-.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--flash)}
+/* hover: the ink soaks a little way into the paper around the edge */
+.btn:hover{transform:translate(-2px,-2px);
+  box-shadow:6px 6px 0 var(--flash), 0 0 0 1px rgba(217,52,43,.22), 0 0 11px 2px rgba(217,52,43,.28)}
 .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--flash)}
-.btn-ghost{background:transparent;color:var(--ink);box-shadow:4px 4px 0 rgba(23,20,15,.22)}
-.btn-ghost:hover{box-shadow:6px 6px 0 rgba(23,20,15,.22)}
+.btn-ghost{background:var(--paper);color:var(--ink);box-shadow:4px 4px 0 rgba(23,20,15,.22)}
+.btn-ghost:hover{box-shadow:6px 6px 0 rgba(23,20,15,.22), 0 0 0 1px rgba(23,20,15,.18), 0 0 11px 2px rgba(23,20,15,.20)}
 .btn-ghost:active{box-shadow:1px 1px 0 rgba(23,20,15,.22)}
 .btn-sm{padding:10px 16px;font-size:11px}
 :focus-visible{outline:3px solid var(--flash);outline-offset:3px}
@@ -266,6 +310,9 @@ a{color:inherit}
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
+  body::after{animation:none}
+  body::before,.hero .stamp .plate-flash,.join .stamp .plate-flash{transform:none}
+  .nav-links a::after{transition:none}
   .ribbon-track{animation:none}
   .hero .stamp{animation:none}
   .reveal{opacity:1;transform:none;transition:none}
@@ -777,6 +824,36 @@ a{color:inherit}
   });
 
   render();
+})();
+</script>
+<script>
+/* --------- the press: scroll drives the paper and the plate offset -------- */
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var root = document.documentElement;
+  var TILE = 14;          /* halftone tile, so the shift can wrap invisibly */
+  var pending = false;
+
+  function update(){
+    pending = false;
+    var y = window.scrollY || window.pageYOffset || 0;
+    var vh = Math.max(1, window.innerHeight);
+    var max = Math.max(1, document.documentElement.scrollHeight - vh);
+
+    root.style.setProperty('--halftone-y', ((y * 0.08) % TILE).toFixed(2) + 'px');
+    root.style.setProperty('--drift', Math.min(1, y / max).toFixed(3));
+    root.style.setProperty('--drift-hero', Math.min(1, y / vh).toFixed(3));
+  }
+
+  function onScroll(){
+    if(pending) return;
+    pending = true;
+    requestAnimationFrame(update);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
 })();
 </script>
 </body>
