@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Press Run — InkBull Arcade</title>
+<meta name="description" content="One button. One bulldog. A sheet of paper moving faster than it should.">
+
+<!-- Replace YOURDOMAIN.com with your real domain -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="InkBull">
+<meta property="og:title" content="Press Run — InkBull Arcade">
+<meta property="og:description" content="One button. One bulldog. A sheet of paper moving faster than it should.">
+<meta property="og:url" content="https://YOURDOMAIN.com/game.html">
+<meta property="og:image" content="https://YOURDOMAIN.com/inkbull-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Press Run — InkBull Arcade">
+<meta name="twitter:description" content="One button. One bulldog. A sheet of paper moving faster than it should.">
+<meta name="twitter:image" content="https://YOURDOMAIN.com/inkbull-og.png">
+<meta name="theme-color" content="#D8D3C3">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 250'%3E%3Crect width='220' height='250' fill='%23D8D3C3'/%3E%3Cpath d='M110 28C142 28 168 38 179 52L198 38C207 50 205 72 193 80C198 96 200 112 197 128C192 170 162 196 110 196C58 196 28 170 23 128C20 112 22 96 27 80C15 72 13 50 22 38L41 52C52 38 78 28 110 28Z' fill='%2317140F'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<!--
+================================================================================
+  LEADERBOARD SETUP (Supabase, free tier)
+
+  1. Create a project at supabase.com
+  2. SQL Editor, run this:
+
+     create table public.press_run_scores (
+       id          bigint generated always as identity primary key,
+       name        text    not null check (char_length(name) between 1 and 12),
+       score       integer not null check (score >= 0 and score <= 500000),
+       created_at  timestamptz not null default now()
+     );
+
+     alter table public.press_run_scores enable row level security;
+
+     create policy "read for everyone"
+       on public.press_run_scores for select using (true);
+
+     create policy "insert for everyone"
+       on public.press_run_scores for insert with check (true);
+
+     create index press_run_scores_score_idx
+       on public.press_run_scores (score desc);
+
+  3. Settings, API: copy the Project URL and the anon public key
+  4. Paste both into CONFIG below
+
+  The anon key is meant to be public. Row level security above is what limits
+  it: anyone may read the board and append a row, nothing else.
+================================================================================
+-->
+
+<style>
+:root{
+  --paper:#D8D3C3;
+  --paper-deep:#C6C0AC;
+  --ink:#17140F;
+  --ink-soft:#5A5346;
+  --flash:#D9342B;
+  --font-display:'Alfa Slab One','Rockwell',Georgia,serif;
+  --font-body:'Archivo','Helvetica Neue',Arial,sans-serif;
+  --font-mono:'Space Mono',ui-monospace,'Courier New',monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--font-body);font-size:16px;line-height:1.6;
+  min-height:100vh;
+}
+body::before{
+  content:"";position:fixed;inset:-40px;z-index:0;pointer-events:none;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(23,20,15,.16) 1px, transparent 1.4px),
+    radial-gradient(circle at 1px 1px, rgba(217,52,43,.10) 1px, transparent 1.4px);
+  background-size:14px 14px,14px 14px;background-position:0 0,7px 7px;opacity:.5;
+}
+.wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:22px clamp(14px,4vw,28px) 60px}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+.back{
+  font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;text-decoration:none;border-bottom:2px solid transparent;padding-bottom:3px;
+}
+.back:hover{border-bottom-color:var(--flash)}
+.top b{font-family:var(--font-display);font-size:20px}
+.top b span{color:var(--flash)}
+
+h1{font-family:var(--font-display);font-weight:400;font-size:clamp(38px,8vw,68px);line-height:.95;letter-spacing:-.02em;margin:0 0 8px}
+h1 span{color:var(--flash)}
+.sub{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 20px}
+
+/* --- stage --- */
+.stage{position:relative;border:2px solid var(--ink);background:var(--paper-deep);line-height:0;touch-action:none}
+.stage canvas{display:block;width:100%;height:auto}
+
+.overlay{
+  position:absolute;inset:0;display:grid;place-content:center;gap:14px;text-align:center;
+  padding:24px;background:rgba(216,211,195,.93);line-height:1.5;
+}
+.overlay.is-hidden{display:none}
+.overlay h2{font-family:var(--font-display);font-weight:400;font-size:clamp(26px,5vw,40px);margin:0;line-height:1}
+.overlay p{margin:0;font-size:15px;color:var(--ink-soft);max-width:42ch}
+.overlay .big{font-family:var(--font-display);font-size:clamp(40px,9vw,64px);line-height:1;color:var(--flash)}
+.keyhint{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;text-decoration:none;padding:13px 22px;
+  border:2px solid var(--ink);background:var(--ink);color:var(--paper);
+  cursor:pointer;transition:transform .12s ease,box-shadow .12s ease;box-shadow:4px 4px 0 var(--flash);
+}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--flash),0 0 11px 2px rgba(217,52,43,.28)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--flash)}
+.btn-ghost{background:var(--paper);color:var(--ink);box-shadow:4px 4px 0 rgba(23,20,15,.22)}
+.btn-ghost:hover{box-shadow:6px 6px 0 rgba(23,20,15,.22),0 0 11px 2px rgba(23,20,15,.20)}
+.btn[disabled]{opacity:.42;cursor:not-allowed;box-shadow:none}
+.btn[disabled]:hover,.btn[disabled]:active{transform:none;box-shadow:none}
+:focus-visible{outline:3px solid var(--flash);outline-offset:3px}
+
+.submit-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.submit-row input{
+  font-family:var(--font-mono);font-size:13px;padding:12px 14px;width:170px;
+  border:2px solid var(--ink);background:var(--paper);color:var(--ink);
+}
+.submit-row input::placeholder{color:var(--ink-soft)}
+
+/* --- board --- */
+.board{margin-top:26px;border:2px solid var(--ink)}
+.board h3{
+  margin:0;padding:12px 16px;border-bottom:2px solid var(--ink);background:var(--ink);color:var(--paper);
+  font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  display:flex;justify-content:space-between;gap:12px;align-items:center;
+}
+.board h3 em{font-style:normal;color:var(--flash)}
+.board ol{list-style:none;margin:0;padding:0;counter-reset:rank}
+.board li{
+  counter-increment:rank;display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:baseline;
+  padding:10px 16px;border-bottom:1px solid rgba(23,20,15,.18);font-family:var(--font-mono);font-size:14px;
+}
+.board li:last-child{border-bottom:0}
+.board li::before{content:counter(rank);color:var(--flash);font-weight:700}
+.board li b{font-weight:400;word-break:break-word}
+.board li span{font-family:var(--font-display);font-size:17px}
+.board .msg{padding:18px 16px;font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);text-align:center;line-height:1.6}
+
+.note{
+  margin-top:26px;border-left:4px solid var(--flash);padding-left:16px;
+  max-width:64ch;font-size:14px;line-height:1.65;color:var(--ink-soft);
+}
+.note b{color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.btn{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a class="back" href="index.html">&larr; Back to InkBull</a>
+    <b>INK<span>BULL</span></b>
+  </div>
+
+  <h1>PRESS <span>RUN</span></h1>
+  <p class="sub">One button &nbsp;&bull;&nbsp; one bulldog &nbsp;&bull;&nbsp; paper moving faster than it should</p>
+
+  <div class="stage" id="stage">
+    <canvas id="game" width="960" height="360"></canvas>
+
+    <div class="overlay" id="ov-start">
+      <h2>Feed the press</h2>
+      <p>Tap, click, or press space to hop. Hold longer to jump higher. Clear the ink blots and rollers, grab the red drops.</p>
+      <button class="btn" id="btn-start" type="button">Start the run</button>
+      <p class="keyhint">Space &nbsp;/&nbsp; tap &nbsp;/&nbsp; click</p>
+    </div>
+
+    <div class="overlay is-hidden" id="ov-dead">
+      <h2>Jammed</h2>
+      <p class="big" id="final-score">0</p>
+      <div class="submit-row">
+        <input id="player-name" type="text" maxlength="12" placeholder="Your name" autocomplete="off" spellcheck="false" aria-label="Your name for the leaderboard">
+        <button class="btn" id="btn-submit" type="button">Send score</button>
+      </div>
+      <p class="keyhint" id="submit-msg">&nbsp;</p>
+      <button class="btn btn-ghost" id="btn-again" type="button">Run it again</button>
+    </div>
+  </div>
+
+  <div class="board">
+    <h3><span>Top of the press</span> <em id="board-count">&mdash;</em></h3>
+    <ol id="board-list"></ol>
+    <p class="msg" id="board-msg">Loading the board&hellip;</p>
+  </div>
+
+  <p class="note">
+    <b>This is a toy.</b> Scores are cosmetic. Holding $BULL does not affect the game, the game does not
+    affect the token, and there is no prize. It exists because a bulldog running across wet newsprint is funny.
+  </p>
+
+</div>
+
+<script>
+/* ===========================================================================
+   CONFIG — paste your Supabase project URL and anon key here.
+   Leave them empty and the game still works; the board just stays local.
+   =========================================================================== */
+var CONFIG = {
+  supabaseUrl: '',        // e.g. 'https://abcdefgh.supabase.co'
+  supabaseAnonKey: '',    // the anon public key
+  table: 'press_run_scores'
+};
+
+(function(){
+  'use strict';
+
+  /* ---------------------------------------------------------------- setup */
+  var W = 960, H = 360, GROUND = 296;
+  var PAPER = '#D8D3C3', PAPER_DEEP = '#C6C0AC', INK = '#17140F', FLASH = '#D9342B';
+
+  var cv = document.getElementById('game');
+  var ctx = cv.getContext('2d');
+  var stage = document.getElementById('stage');
+  var ovStart = document.getElementById('ov-start');
+  var ovDead = document.getElementById('ov-dead');
+  var elFinal = document.getElementById('final-score');
+  var elName = document.getElementById('player-name');
+  var btnSubmit = document.getElementById('btn-submit');
+  var btnStart = document.getElementById('btn-start');
+  var btnAgain = document.getElementById('btn-again');
+  var submitMsg = document.getElementById('submit-msg');
+  var boardList = document.getElementById('board-list');
+  var boardMsg = document.getElementById('board-msg');
+  var boardCount = document.getElementById('board-count');
+
+  /* crisp on high-density screens */
+  function fitCanvas(){
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = W * dpr;
+    cv.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  fitCanvas();
+  window.addEventListener('resize', fitCanvas);
+
+  /* --------------------------------------------------- the bulldog, again */
+  var P = {
+    head: new Path2D("M110 28C142 28 168 38 179 52L198 38C207 50 205 72 193 80C198 96 200 112 197 128C192 170 162 196 110 196C58 196 28 170 23 128C20 112 22 96 27 80C15 72 13 50 22 38L41 52C52 38 78 28 110 28Z"),
+    earL: new Path2D("M26 46L41 58L30 68Z"),
+    earR: new Path2D("M194 46L179 58L190 68Z"),
+    muzzle: new Path2D("M110 105C139 105 162 123 162 145C162 169 139 185 110 185C81 185 58 169 58 145C58 123 81 105 110 105Z"),
+    eyeL: new Path2D("M78 76C88 76 96 83 96 90C96 97 88 102 78 102C68 102 60 97 60 90C60 83 68 76 78 76Z"),
+    eyeR: new Path2D("M142 76C152 76 160 83 160 90C160 97 152 102 142 102C132 102 124 97 124 90C124 83 132 76 142 76Z"),
+    nose: new Path2D("M110 114C126 114 137 122 137 131C137 141 125 146 110 146C95 146 83 141 83 131C83 122 94 114 110 114Z")
+  };
+
+  /* draw the mark at a given height, optionally as the red plate */
+  function drawBull(x, y, h, color, showFace){
+    var k = h / 250;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(k, k);
+    ctx.fillStyle = color;
+    ctx.fill(P.head);
+    if(showFace){
+      ctx.fillStyle = PAPER;
+      ctx.fill(P.earL); ctx.fill(P.earR); ctx.fill(P.muzzle);
+      ctx.fill(P.eyeL); ctx.fill(P.eyeR);
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(80, 92, 7.5, 0, 6.284); ctx.fill();
+      ctx.beginPath(); ctx.arc(140, 92, 7.5, 0, 6.284); ctx.fill();
+      ctx.fill(P.nose);
+      ctx.strokeStyle = color; ctx.lineWidth = 6; ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(110, 146); ctx.lineTo(110, 157);
+      ctx.moveTo(110, 157); ctx.bezierCurveTo(96, 157, 84, 163, 70, 159);
+      ctx.moveTo(110, 157); ctx.bezierCurveTo(124, 157, 136, 163, 150, 159);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  /* --------------------------------------------------------------- state */
+  var G = {
+    mode: 'menu',           // menu | play | dead
+    t: 0,
+    dist: 0,
+    speed: 6,
+    drops: 0,
+    score: 0,
+    best: 0,
+    py: 0, vy: 0,           // player offset above ground, velocity
+    held: false,
+    grounded: true,
+    obstacles: [],
+    pickups: [],
+    nextObstacle: 340,
+    nextPickup: 520,
+    shake: 0,
+    startedAt: 0
+  };
+
+  var PLAYER_X = 156, PLAYER_H = 54;
+  var GRAVITY = 0.88, JUMP = 13.2, HOLD_LIFT = 0.26, MAX_HOLD = 12;
+  var holdFrames = 0;
+
+  function reset(){
+    G.t = 0; G.dist = 0; G.speed = 6; G.drops = 0; G.score = 0;
+    G.py = 0; G.vy = 0; G.grounded = true; G.held = false; holdFrames = 0;
+    G.obstacles = []; G.pickups = [];
+    G.nextObstacle = 340; G.nextPickup = 520; G.shake = 0;
+    G.startedAt = Date.now();
+  }
+
+  function start(){
+    reset();
+    G.mode = 'play';
+    ovStart.classList.add('is-hidden');
+    ovDead.classList.add('is-hidden');
+    submitMsg.textContent = '\u00a0';
+    btnSubmit.disabled = false;
+  }
+
+  function die(){
+    G.mode = 'dead';
+    G.shake = 14;
+    if(G.score > G.best) G.best = G.score;
+    elFinal.textContent = G.score.toLocaleString('en-US');
+    ovDead.classList.remove('is-hidden');
+  }
+
+  /* ------------------------------------------------------------ spawning */
+  function spawnObstacle(){
+    var roll = Math.random();
+    var tall = roll < Math.min(0.42, 0.14 + G.dist / 26000);
+    if(tall){
+      G.obstacles.push({ x: W + 40, w: 20 + Math.random() * 8, h: 52 + Math.random() * 22, kind: 'roller' });
+    } else {
+      G.obstacles.push({ x: W + 40, w: 30 + Math.random() * 40, h: 20 + Math.random() * 12, kind: 'blot' });
+    }
+    /* Spacing is measured in FRAMES, not pixels, so the rhythm stays fair as
+       speed climbs. 40 frames is the floor and a held jump lands in 35, which
+       leaves real landing room at every speed. Verified by simulation. */
+    var gapFrames = Math.max(40, (58 + Math.random() * 70) - G.dist / 3000);
+    G.nextObstacle = gapFrames * G.speed;
+  }
+
+  function spawnPickup(){
+    var high = Math.random() < 0.55;
+    G.pickups.push({
+      x: W + 30,
+      y: GROUND - (high ? 96 + Math.random() * 44 : 40 + Math.random() * 22),
+      got: false
+    });
+    G.nextPickup = 380 + Math.random() * 460;
+  }
+
+  /* -------------------------------------------------------------- update */
+  function update(step){
+    G.t += step;
+    if(G.shake > 0) G.shake = Math.max(0, G.shake - step * 0.9);
+    if(G.mode !== 'play') return;
+
+    G.speed = Math.min(12.5, 6 + G.dist / 2400);
+    var dx = G.speed * step;
+    G.dist += dx;
+
+    /* jump physics: holding the button early buys extra height */
+    if(!G.grounded){
+      if(G.held && G.vy < 0 && holdFrames < MAX_HOLD){
+        G.vy -= HOLD_LIFT * step;
+        holdFrames += step;
+      }
+      G.vy += GRAVITY * step;
+      G.py -= G.vy * step;
+      if(G.py <= 0){ G.py = 0; G.vy = 0; G.grounded = true; }
+    }
+
+    /* obstacles */
+    G.nextObstacle -= dx;
+    if(G.nextObstacle <= 0) spawnObstacle();
+    for(var i = G.obstacles.length - 1; i >= 0; i--){
+      var o = G.obstacles[i];
+      o.x -= dx;
+      if(o.x + o.w < -60){ G.obstacles.splice(i, 1); continue; }
+      if(hits(o)){ die(); return; }
+    }
+
+    /* pickups */
+    G.nextPickup -= dx;
+    if(G.nextPickup <= 0) spawnPickup();
+    for(var j = G.pickups.length - 1; j >= 0; j--){
+      var p = G.pickups[j];
+      p.x -= dx;
+      if(p.x < -40){ G.pickups.splice(j, 1); continue; }
+      if(!p.got && near(p)){ p.got = true; G.drops++; }
+    }
+
+    G.score = Math.floor(G.dist / 9) + G.drops * 25;
+  }
+
+  function playerBox(){
+    /* slightly forgiving hitbox */
+    var h = PLAYER_H * 0.82, w = PLAYER_H * 0.66;
+    return { x: PLAYER_X - w / 2, y: GROUND - G.py - h, w: w, h: h };
+  }
+
+  function hits(o){
+    var b = playerBox();
+    var oy = GROUND - o.h;
+    return b.x < o.x + o.w && b.x + b.w > o.x && b.y < GROUND && b.y + b.h > oy;
+  }
+
+  function near(p){
+    var b = playerBox();
+    var cx = b.x + b.w / 2, cy = b.y + b.h / 2;
+    return Math.abs(cx - p.x) < 30 && Math.abs(cy - p.y) < 34;
+  }
+
+  /* ---------------------------------------------------------------- draw */
+  function drawPaper(){
+    ctx.fillStyle = PAPER;
+    ctx.fillRect(0, 0, W, H);
+
+    /* halftone, parallaxed against the run */
+    var off = (G.dist * 0.35) % 16;
+    ctx.save();
+    ctx.translate(-off, 0);
+    for(var y = 0; y < H + 16; y += 16){
+      for(var x = 0; x < W + 32; x += 16){
+        ctx.fillStyle = 'rgba(23,20,15,.10)';
+        ctx.beginPath(); ctx.arc(x, y, 1.5, 0, 6.284); ctx.fill();
+        ctx.fillStyle = 'rgba(217,52,43,.08)';
+        ctx.beginPath(); ctx.arc(x + 8, y + 8, 1.5, 0, 6.284); ctx.fill();
+      }
+    }
+    ctx.restore();
+  }
+
+  function drawGround(){
+    /* the sheet edge */
+    ctx.fillStyle = PAPER_DEEP;
+    ctx.fillRect(0, GROUND + 6, W, H - GROUND);
+    ctx.fillStyle = INK;
+    ctx.fillRect(0, GROUND, W, 6);
+
+    /* scrolling perforation dashes */
+    ctx.fillStyle = 'rgba(23,20,15,.34)';
+    var step = 34, o = G.dist % step;
+    for(var x = -step; x < W + step; x += step){
+      ctx.fillRect(x - o, GROUND + 18, 16, 3);
+    }
+  }
+
+  function drawObstacle(o){
+    var y = GROUND - o.h;
+    /* red plate first, always a touch out of register */
+    ctx.fillStyle = FLASH;
+    blob(o.x - 4, y + 3, o.w, o.h, o.kind);
+    ctx.fillStyle = INK;
+    blob(o.x, y, o.w, o.h, o.kind);
+  }
+
+  function blob(x, y, w, h, kind){
+    ctx.beginPath();
+    if(kind === 'roller'){
+      var r = w / 2;
+      ctx.moveTo(x, y + r);
+      ctx.arc(x + r, y + r, r, Math.PI, 0);
+      ctx.lineTo(x + w, y + h);
+      ctx.lineTo(x, y + h);
+      ctx.closePath();
+    } else {
+      /* irregular ink blot */
+      ctx.moveTo(x, y + h);
+      ctx.bezierCurveTo(x + w * 0.04, y + h * 0.28, x + w * 0.22, y, x + w * 0.46, y + h * 0.10);
+      ctx.bezierCurveTo(x + w * 0.68, y + h * 0.20, x + w * 0.82, y - h * 0.06, x + w * 0.94, y + h * 0.34);
+      ctx.lineTo(x + w, y + h);
+      ctx.closePath();
+    }
+    ctx.fill();
+  }
+
+  function drawPickup(p){
+    if(p.got) return;
+    var bob = Math.sin((G.t + p.x) * 0.06) * 3;
+    ctx.save();
+    ctx.translate(p.x, p.y + bob);
+    ctx.fillStyle = FLASH;
+    ctx.beginPath();
+    ctx.moveTo(0, -13);
+    ctx.bezierCurveTo(7, -2, 10, 3, 10, 7);
+    ctx.arc(0, 7, 10, 0, Math.PI);
+    ctx.bezierCurveTo(-10, 3, -7, -2, 0, -13);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawPlayer(){
+    var y = GROUND - G.py - PLAYER_H;
+    var squash = G.grounded ? Math.sin(G.t * 0.34) * 1.6 : 0;
+
+    /* legs */
+    ctx.fillStyle = INK;
+    var swing = G.grounded ? Math.sin(G.t * 0.42) * 6 : -3;
+    legAt(PLAYER_X - 11, GROUND - G.py, swing);
+    legAt(PLAYER_X + 7, GROUND - G.py, -swing);
+
+    /* two plates, as ever */
+    var hw = PLAYER_H * 220 / 250 / 2;
+    drawBull(PLAYER_X - hw - 4, y + squash + 3, PLAYER_H, FLASH, false);
+    drawBull(PLAYER_X - hw, y + squash, PLAYER_H, INK, true);
+  }
+
+  function legAt(x, groundY, swing){
+    ctx.save();
+    ctx.fillStyle = INK;
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(x, groundY - 14 + Math.min(0, swing), 8, 14 - Math.min(0, swing), 4)
+                  : ctx.rect(x, groundY - 14, 8, 14);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawHud(){
+    ctx.fillStyle = INK;
+    ctx.font = '700 15px "Space Mono", monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('SCORE ' + G.score, 18, 32);
+    ctx.fillStyle = FLASH;
+    ctx.fillText('DROPS ' + G.drops, 18, 54);
+    if(G.best){
+      ctx.fillStyle = 'rgba(90,83,70,.9)';
+      ctx.textAlign = 'right';
+      ctx.fillText('BEST ' + G.best, W - 18, 32);
+    }
+  }
+
+  function draw(){
+    ctx.save();
+    if(G.shake > 0){
+      ctx.translate((Math.random() - 0.5) * G.shake, (Math.random() - 0.5) * G.shake);
+    }
+    drawPaper();
+    drawGround();
+    G.obstacles.forEach(drawObstacle);
+    G.pickups.forEach(drawPickup);
+    drawPlayer();
+    drawHud();
+    ctx.restore();
+  }
+
+  /* ---------------------------------------------------------------- loop */
+  var last = 0;
+  function frame(ts){
+    if(!last) last = ts;
+    var step = Math.min(3, (ts - last) / 16.667);
+    last = ts;
+    if(!document.hidden) { update(step); draw(); }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* --------------------------------------------------------------- input */
+  function press(){
+    if(G.mode === 'menu'){ start(); return; }
+    if(G.mode !== 'play') return;
+    G.held = true;
+    if(G.grounded){
+      G.grounded = false;
+      G.vy = -JUMP;
+      holdFrames = 0;
+    }
+  }
+  function release(){ G.held = false; }
+
+  stage.addEventListener('pointerdown', function(e){ e.preventDefault(); press(); });
+  window.addEventListener('pointerup', release);
+  window.addEventListener('keydown', function(e){
+    if(e.code === 'Space' || e.code === 'ArrowUp'){
+      if(document.activeElement === elName) return;
+      e.preventDefault(); press();
+    }
+  });
+  window.addEventListener('keyup', function(e){
+    if(e.code === 'Space' || e.code === 'ArrowUp') release();
+  });
+
+  btnStart.addEventListener('click', function(e){ e.stopPropagation(); start(); });
+  btnAgain.addEventListener('click', function(e){ e.stopPropagation(); start(); });
+
+  /* --------------------------------------------------------- leaderboard */
+  var configured = !!(CONFIG.supabaseUrl && CONFIG.supabaseAnonKey);
+  var restUrl = configured ? CONFIG.supabaseUrl.replace(/\/+$/, '') + '/rest/v1/' + CONFIG.table : '';
+  var headers = configured ? {
+    'apikey': CONFIG.supabaseAnonKey,
+    'Authorization': 'Bearer ' + CONFIG.supabaseAnonKey,
+    'Content-Type': 'application/json'
+  } : {};
+
+  function renderBoard(rows){
+    boardList.innerHTML = '';
+    if(!rows.length){
+      boardMsg.textContent = 'No scores yet. Be the first name on the sheet.';
+      boardMsg.style.display = '';
+      boardCount.textContent = '0';
+      return;
+    }
+    boardMsg.style.display = 'none';
+    boardCount.textContent = 'Top ' + rows.length;
+    rows.forEach(function(r){
+      var li = document.createElement('li');
+      var b = document.createElement('b');
+      b.textContent = r.name;
+      var s = document.createElement('span');
+      s.textContent = Number(r.score).toLocaleString('en-US');
+      li.appendChild(b); li.appendChild(s);
+      boardList.appendChild(li);
+    });
+  }
+
+  function loadBoard(){
+    if(!configured){
+      boardMsg.innerHTML = 'Leaderboard not connected yet.<br>Add your Supabase URL and anon key in CONFIG at the top of this file.';
+      boardCount.textContent = 'local';
+      return;
+    }
+    fetch(restUrl + '?select=name,score&order=score.desc&limit=10', { headers: headers })
+      .then(function(r){ if(!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(renderBoard)
+      .catch(function(){
+        boardMsg.textContent = 'Could not reach the leaderboard right now.';
+        boardCount.textContent = '\u2014';
+      });
+  }
+
+  btnSubmit.addEventListener('click', function(){
+    var name = (elName.value || '').trim().replace(/\s+/g, ' ').slice(0, 12);
+    if(!name){ submitMsg.textContent = 'Put a name in first'; elName.focus(); return; }
+    if(!configured){ submitMsg.textContent = 'Leaderboard not connected'; return; }
+
+    /* a plausibility floor: the score cannot outrun the clock */
+    var seconds = Math.max(1, (Date.now() - G.startedAt) / 1000);
+    if(G.score > seconds * 220){ submitMsg.textContent = 'Score looked impossible, not sent'; return; }
+
+    btnSubmit.disabled = true;
+    submitMsg.textContent = 'Sending\u2026';
+    fetch(restUrl, {
+      method: 'POST',
+      headers: Object.assign({ 'Prefer': 'return=minimal' }, headers),
+      body: JSON.stringify({ name: name, score: G.score })
+    })
+      .then(function(r){ if(!r.ok) throw new Error('http ' + r.status); })
+      .then(function(){ submitMsg.textContent = 'On the board'; loadBoard(); })
+      .catch(function(){ submitMsg.textContent = 'Could not send it'; btnSubmit.disabled = false; });
+  });
+
+  loadBoard();
+})();
+</script>
+</body>
+</html>
