@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>InkBull — $INK</title>
-<meta name="description" content="InkBull. Kaki pendek, keyakinan panjang.">
+<title>InkBull — $INK on Robinhood Chain</title>
+<meta name="description" content="InkBull. Short legs, long conviction. A fair-launch meme token on InkyPump, Robinhood Chain.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 250'%3E%3Crect width='220' height='250' fill='%23D8D3C3'/%3E%3Cpath d='M110 28C142 28 168 38 179 52L198 38C207 50 205 72 193 80C198 96 200 112 197 128C192 170 162 196 110 196C58 196 28 170 23 128C20 112 22 96 27 80C15 72 13 50 22 38L41 52C52 38 78 28 110 28Z' fill='%2317140F'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +16,6 @@
   --ink:#17140F;
   --ink-soft:#5A5346;
   --flash:#D9342B;
-  --jade:#1C6B4F;
 
   --font-display:'Alfa Slab One','Rockwell',Georgia,serif;
   --font-script:'Yellowtail',cursive;
@@ -28,7 +27,7 @@
 }
 
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{
   margin:0;
   background-color:var(--paper);
@@ -39,13 +38,9 @@ body{
   overflow-x:hidden;
 }
 
-/* ---------- LATAR: kertas cetak + halftone + serat ---------- */
+/* ---------- BACKGROUND: press sheet, halftone, paper grain ---------- */
 body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:
     radial-gradient(circle at 1px 1px, rgba(23,20,15,.16) 1px, transparent 1.4px),
     radial-gradient(circle at 1px 1px, rgba(217,52,43,.10) 1px, transparent 1.4px);
@@ -54,17 +49,12 @@ body::before{
   opacity:.5;
 }
 body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
-  mix-blend-mode:multiply;
-  opacity:.38;
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  mix-blend-mode:multiply;opacity:.38;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23g)' opacity='.55'/%3E%3C/svg%3E");
 }
 
-/* Tanda potong pelat cetak di empat sudut */
+/* Registration marks, four corners */
 .crop{position:fixed;z-index:2;width:26px;height:26px;pointer-events:none;opacity:.75}
 .crop span{position:absolute;background:var(--flash)}
 .crop span:first-child{width:100%;height:1.5px;top:50%}
@@ -77,40 +67,28 @@ body::after{
 
 .wrap{position:relative;z-index:1;max-width:var(--wrap);margin:0 auto;padding-inline:var(--gut)}
 
-/* ---------- TIPOGRAFI ---------- */
+/* ---------- TYPE ---------- */
 h1,h2,h3{font-family:var(--font-display);font-weight:400;line-height:.95;letter-spacing:-.01em;margin:0}
 p{margin:0 0 1em}
 a{color:inherit}
 
 .eyebrow{
-  font-family:var(--font-mono);
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:.22em;
-  text-transform:uppercase;
-  color:var(--ink-soft);
-  margin:0 0 18px;
+  font-family:var(--font-mono);font-size:12px;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 18px;
 }
 .eyebrow em{font-style:normal;color:var(--flash)}
 
-/* ---------- LOGO / STEMPEL ---------- */
+/* ---------- LOGO / STAMP ---------- */
 .stamp{position:relative;display:inline-block;line-height:0}
 .stamp svg{display:block;width:100%;height:auto}
 .stamp .plate-flash{
-  position:absolute;
-  inset:0;
-  color:var(--flash);
-  transform:translate(-6px,5px) rotate(-1.2deg);
-  mix-blend-mode:multiply;
+  position:absolute;inset:0;color:var(--flash);
+  transform:translate(-6px,5px) rotate(-1.2deg);mix-blend-mode:multiply;
 }
 .stamp .plate-ink{position:relative;color:var(--ink)}
 
 /* ---------- NAV ---------- */
-.nav{
-  position:relative;z-index:3;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  padding-block:22px 10px;
-}
+.nav{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:22px 10px}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none}
 .brand .stamp{width:44px}
 .brand b{font-family:var(--font-display);font-size:22px;letter-spacing:.01em}
@@ -121,9 +99,9 @@ a{color:inherit}
   padding-bottom:3px;border-bottom:2px solid transparent;
 }
 .nav-links a:hover{border-bottom-color:var(--flash)}
-@media (max-width:760px){.nav-links a:not(.btn){display:none}}
+@media (max-width:900px){.nav-links a:not(.btn){display:none}}
 
-/* ---------- TOMBOL ---------- */
+/* ---------- BUTTONS ---------- */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:10px;
   font-family:var(--font-mono);font-size:13px;font-weight:700;
@@ -143,55 +121,28 @@ a{color:inherit}
 /* ---------- HERO ---------- */
 .hero{padding-block:clamp(28px,5vw,54px) clamp(40px,7vw,80px);text-align:center}
 .hero .stamp{width:clamp(210px,30vw,300px);margin-bottom:26px}
-.hero h1{
-  font-size:clamp(64px,15vw,168px);
-  letter-spacing:-.035em;
-  margin-bottom:10px;
-}
+.hero h1{font-size:clamp(64px,15vw,168px);letter-spacing:-.035em;margin-bottom:10px}
 .hero h1 span{color:var(--flash)}
-.ticker-line{
-  font-family:var(--font-script);
-  font-size:clamp(26px,5vw,44px);
-  color:var(--flash);
-  line-height:1;
-  margin-bottom:22px;
-}
-.hero-lede{
-  max-width:34ch;margin:0 auto 30px;
-  font-size:clamp(17px,2.1vw,21px);
-  color:var(--ink-soft);
-}
+.ticker-line{font-family:var(--font-script);font-size:clamp(26px,5vw,44px);color:var(--flash);line-height:1;margin-bottom:22px}
+.hero-lede{max-width:36ch;margin:0 auto 30px;font-size:clamp(17px,2.1vw,21px);color:var(--ink-soft)}
 .hero-cta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-bottom:34px}
 
-/* Bar kontrak */
 .ca{
   display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;
-  max-width:660px;margin:0 auto;
-  border:2px dashed rgba(23,20,15,.4);
-  background:rgba(198,192,172,.5);
-  padding:12px 14px;
+  max-width:680px;margin:0 auto;
+  border:2px dashed rgba(23,20,15,.4);background:rgba(198,192,172,.5);padding:12px 14px;
 }
 .ca-label{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
 .ca-value{font-family:var(--font-mono);font-size:13px;word-break:break-all;flex:1;min-width:200px;text-align:left}
 
-/* ---------- PITA BERJALAN ---------- */
-.ribbon{
-  position:relative;z-index:1;
-  background:var(--ink);color:var(--paper);
-  padding-block:14px;margin-block:clamp(30px,6vw,60px);
-  overflow:hidden;
-  border-block:3px solid var(--ink);
-}
+/* ---------- MARQUEE ---------- */
+.ribbon{position:relative;z-index:1;background:var(--ink);color:var(--paper);padding-block:14px;margin-block:clamp(30px,6vw,60px);overflow:hidden;border-block:3px solid var(--ink)}
 .ribbon-track{display:flex;width:max-content;animation:slide 34s linear infinite}
-.ribbon-track span{
-  font-family:var(--font-script);
-  font-size:30px;line-height:1.35;
-  padding-inline:28px;white-space:nowrap;
-}
+.ribbon-track span{font-family:var(--font-script);font-size:30px;line-height:1.35;padding-inline:28px;white-space:nowrap}
 .ribbon-track span i{font-style:normal;color:var(--flash)}
 @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-/* ---------- SEKSI ---------- */
+/* ---------- SECTIONS ---------- */
 .band{position:relative;z-index:1;padding-block:clamp(46px,8vw,86px)}
 .band + .band{border-top:2px solid rgba(23,20,15,.28)}
 .band h2{font-size:clamp(34px,6vw,62px);letter-spacing:-.02em;margin-bottom:22px}
@@ -201,7 +152,6 @@ a{color:inherit}
 .prose p{max-width:56ch;color:var(--ink-soft)}
 .prose strong{color:var(--ink);font-weight:600}
 
-/* Kartu penggunaan logo */
 .usage{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .usage figure{margin:0;border:2px solid var(--ink);display:grid;place-items:center;aspect-ratio:1;padding:18px}
 .usage figure .stamp{width:100%}
@@ -212,22 +162,22 @@ a{color:inherit}
 .u-flash{background:var(--flash)}
 .u-flash .plate-ink{color:var(--ink)}
 .u-flash .plate-flash{opacity:0}
-.usage figcaption{
-  grid-column:span 3;
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--ink-soft);text-align:center;margin-top:4px;
-}
+.usage figcaption{grid-column:span 3;font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);text-align:center;margin-top:4px}
 
-/* Spesifikasi token */
 .specs{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:rgba(23,20,15,.28);border:2px solid var(--ink)}
 @media (max-width:840px){.specs{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:460px){.specs{grid-template-columns:1fr}}
 .specs div{background:var(--paper);padding:24px 20px}
 .specs dt{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px}
-.specs dd{margin:0;font-family:var(--font-display);font-size:clamp(22px,3vw,30px);line-height:1.05}
-.specs dd small{display:block;font-family:var(--font-body);font-size:13px;font-weight:400;color:var(--ink-soft);margin-top:8px;letter-spacing:0}
+.specs dd{margin:0;font-family:var(--font-display);font-size:clamp(20px,2.6vw,27px);line-height:1.08}
+.specs dd small{display:block;font-family:var(--font-body);font-size:13px;font-weight:400;color:var(--ink-soft);margin-top:8px;letter-spacing:0;line-height:1.5}
 
-/* Langkah beli — urutan nyata, jadi diberi nomor */
+.note{
+  margin-top:24px;border-left:4px solid var(--flash);padding-left:18px;
+  max-width:64ch;font-size:14px;line-height:1.65;color:var(--ink-soft);
+}
+.note b{color:var(--ink)}
+
 .steps{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
 @media (max-width:840px){.steps{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:460px){.steps{grid-template-columns:1fr}}
@@ -236,7 +186,6 @@ a{color:inherit}
 .steps h3{font-size:22px;margin-bottom:8px}
 .steps p{font-size:15px;color:var(--ink-soft);margin:0}
 
-/* Fase */
 .phases{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 @media (max-width:760px){.phases{grid-template-columns:1fr}}
 .phases article{border:2px solid var(--ink);padding:26px 24px;background:rgba(198,192,172,.35)}
@@ -244,26 +193,19 @@ a{color:inherit}
 .phases p{font-size:15px;color:var(--ink-soft);margin:0}
 .phases .tag{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--flash);display:block;margin-bottom:12px}
 
-/* Gabung komunitas */
 .join{text-align:center}
 .join .stamp{width:120px;margin-bottom:24px}
 .join h2{margin-bottom:14px}
-.join p{max-width:44ch;margin:0 auto 28px;color:var(--ink-soft)}
+.join p{max-width:46ch;margin:0 auto 28px;color:var(--ink-soft)}
 .socials{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
 
-/* Footer */
 .foot{position:relative;z-index:1;border-top:2px solid rgba(23,20,15,.28);padding-block:36px 46px}
 .foot-top{display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between;margin-bottom:26px}
 .foot-top .brand b{font-size:18px}
-.risk{
-  border-left:4px solid var(--flash);
-  padding-left:18px;max-width:70ch;
-  font-size:14px;line-height:1.65;color:var(--ink-soft);
-}
+.risk{border-left:4px solid var(--flash);padding-left:18px;max-width:72ch;font-size:14px;line-height:1.65;color:var(--ink-soft)}
 .risk b{color:var(--ink)}
 .foot-note{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-top:26px}
 
-/* Animasi masuk stempel */
 @keyframes press{
   0%{opacity:0;transform:scale(1.22) rotate(2.5deg)}
   55%{opacity:1;transform:scale(.97) rotate(-1deg)}
@@ -274,6 +216,7 @@ a{color:inherit}
 .reveal.in{opacity:1;transform:none}
 
 @media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
   .ribbon-track{animation:none}
   .hero .stamp{animation:none}
   .reveal{opacity:1;transform:none;transition:none}
@@ -288,46 +231,36 @@ a{color:inherit}
 <div class="crop crop-bl"><span></span><span></span></div>
 <div class="crop crop-br"><span></span><span></span></div>
 
-<!-- ============ LOGO INKBULL (satu sumber, dipakai ulang) ============ -->
+<!-- ============ INKBULL MARK (single source, reused) ============ -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="bull" viewBox="0 0 220 250">
-    <!-- kepala + telinga -->
     <path fill="currentColor" d="M110 28C142 28 168 38 179 52L198 38C207 50 205 72 193 80C198 96 200 112 197 128C192 170 162 196 110 196C58 196 28 170 23 128C20 112 22 96 27 80C15 72 13 50 22 38L41 52C52 38 78 28 110 28Z"/>
-    <!-- dalam telinga -->
     <path fill="var(--paper)" d="M26 46L41 58L30 68Z"/>
     <path fill="var(--paper)" d="M194 46L179 58L190 68Z"/>
-    <!-- moncong -->
     <path fill="var(--paper)" d="M110 105C139 105 162 123 162 145C162 169 139 185 110 185C81 185 58 169 58 145C58 123 81 105 110 105Z"/>
-    <!-- mata -->
     <path fill="var(--paper)" d="M78 76C88 76 96 83 96 90C96 97 88 102 78 102C68 102 60 97 60 90C60 83 68 76 78 76Z"/>
     <path fill="var(--paper)" d="M142 76C152 76 160 83 160 90C160 97 152 102 142 102C132 102 124 97 124 90C124 83 132 76 142 76Z"/>
     <circle cx="80" cy="92" r="7.5" fill="currentColor"/>
     <circle cx="140" cy="92" r="7.5" fill="currentColor"/>
-    <!-- kerutan dahi -->
     <g fill="none" stroke="var(--paper)" stroke-width="5" stroke-linecap="round">
       <path d="M100 98C97 86 96 74 99 62"/>
       <path d="M110 100C110 86 110 74 110 62"/>
       <path d="M120 98C123 86 124 74 121 62"/>
     </g>
-    <!-- hidung -->
     <path fill="currentColor" d="M110 114C126 114 137 122 137 131C137 141 125 146 110 146C95 146 83 141 83 131C83 122 94 114 110 114Z"/>
     <ellipse cx="99" cy="129" rx="3" ry="4.5" fill="var(--paper)"/>
     <ellipse cx="121" cy="129" rx="3" ry="4.5" fill="var(--paper)"/>
-    <!-- mulut -->
     <g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round">
       <path d="M110 146V157"/>
       <path d="M110 157C96 157 84 163 70 159"/>
       <path d="M110 157C124 157 136 163 150 159"/>
     </g>
-    <!-- taring bawah -->
     <path fill="var(--paper)" d="M84 167L88 151L92 167Z"/>
     <path fill="var(--paper)" d="M128 167L132 151L136 167Z"/>
-    <!-- kalung + paku -->
     <path fill="currentColor" d="M46 189C70 208 150 208 174 189L182 210C152 232 68 232 38 210Z"/>
     <path fill="var(--paper)" d="M110 203L117 213L110 223L103 213Z"/>
     <path fill="var(--paper)" d="M72 199L78 208L72 217L66 208Z"/>
     <path fill="var(--paper)" d="M148 199L154 208L148 217L142 208Z"/>
-    <!-- tetesan tinta -->
     <path fill="currentColor" d="M92 226C92 226 86 236 86 240C86 244 89 246 92 246C95 246 98 244 98 240C98 236 92 226 92 226Z"/>
     <path fill="currentColor" d="M132 222C132 222 127 231 127 234C127 238 129 240 132 240C135 240 137 238 137 234C137 231 132 222 132 222Z"/>
   </symbol>
@@ -343,11 +276,11 @@ a{color:inherit}
       <b>InkBull</b>
     </a>
     <div class="nav-links">
-      <a href="#anjingnya">Anjingnya</a>
-      <a href="#spek">Spesifikasi</a>
-      <a href="#cara-beli">Cara beli</a>
-      <a href="#fase">Fase</a>
-      <a class="btn btn-sm" href="#cara-beli">Beli $INK</a>
+      <a href="#the-dog">The dog</a>
+      <a href="#launch">Launch</a>
+      <a href="#how-to-buy">How to buy</a>
+      <a href="#lifecycle">Lifecycle</a>
+      <a class="btn btn-sm" href="https://inkypump.com/robinhood" target="_blank" rel="noopener">Buy $INK</a>
     </div>
   </nav>
 </div>
@@ -355,38 +288,38 @@ a{color:inherit}
 <header class="wrap hero" id="top">
   <span class="stamp">
     <svg class="plate-flash" viewBox="0 0 220 250" aria-hidden="true"><use href="#bull"/></svg>
-    <svg class="plate-ink" viewBox="0 0 220 250" role="img" aria-label="Kepala bulldog InkBull"><use href="#bull"/></svg>
+    <svg class="plate-ink" viewBox="0 0 220 250" role="img" aria-label="InkBull bulldog mark"><use href="#bull"/></svg>
   </span>
   <h1>INK<span>BULL</span></h1>
-  <p class="ticker-line">Kaki pendek, keyakinan panjang</p>
-  <p class="hero-lede">Seekor bulldog dicetak ke atas rantai, lalu dibiarkan mengering. Tidak ada yang menghapusnya.</p>
+  <p class="ticker-line">Short legs, long conviction</p>
+  <p class="hero-lede">A bulldog pressed onto Robinhood Chain and left to dry. Nobody gets to wipe it off.</p>
   <div class="hero-cta">
-    <a class="btn" href="#cara-beli">Beli $INK</a>
-    <a class="btn btn-ghost" href="#" rel="noopener">Lihat grafik</a>
+    <a class="btn" href="https://inkypump.com/robinhood" target="_blank" rel="noopener">Buy on InkyPump</a>
+    <a class="btn btn-ghost" href="https://robinscan.io/" target="_blank" rel="noopener">Check the contract</a>
   </div>
   <div class="ca">
-    <span class="ca-label">Kontrak</span>
+    <span class="ca-label">Contract</span>
     <span class="ca-value" id="ca-value">0x0000000000000000000000000000000000000000</span>
-    <button class="btn btn-ghost btn-sm" id="copy-btn" type="button">Salin</button>
+    <button class="btn btn-ghost btn-sm" id="copy-btn" type="button">Copy</button>
   </div>
 </header>
 
 <div class="ribbon" aria-hidden="true">
   <div class="ribbon-track">
-    <span>InkBull <i>&bull;</i> tanpa peta jalan, hanya pipi menggantung <i>&bull;</i> pelat merah tidak pernah pas <i>&bull;</i> tinta sudah kering <i>&bull;</i>&nbsp;</span>
-    <span>InkBull <i>&bull;</i> tanpa peta jalan, hanya pipi menggantung <i>&bull;</i> pelat merah tidak pernah pas <i>&bull;</i> tinta sudah kering <i>&bull;</i>&nbsp;</span>
+    <span>InkBull <i>&bull;</i> no roadmap, just jowls <i>&bull;</i> the red plate never lines up <i>&bull;</i> the ink is dry <i>&bull;</i>&nbsp;</span>
+    <span>InkBull <i>&bull;</i> no roadmap, just jowls <i>&bull;</i> the red plate never lines up <i>&bull;</i> the ink is dry <i>&bull;</i>&nbsp;</span>
   </div>
 </div>
 
 <main>
-  <section class="wrap band reveal" id="anjingnya">
+  <section class="wrap band reveal" id="the-dog">
     <div class="two-col">
       <div class="prose">
-        <p class="eyebrow">Bagian satu <em>&mdash;</em> anjingnya</p>
-        <h2>Bukan protokol.<br>Cuma anjing.</h2>
-        <p>InkBull tidak punya imbal hasil, tidak punya brankas, dan tidak punya buku putih yang cukup tebal untuk mengganjal pintu.</p>
-        <p>Yang ada cuma satu bulldog yang dicetak seperti flash tato lama: <strong>pelat hitam, pelat merah, dan meleset sedikit</strong> &mdash; persis seperti sablon yang dikerjakan buru-buru. Kami tidak memperbaikinya. Itu justru tandanya.</p>
-        <p>Pasokan berhenti bergerak di hari yang sama saat ia dicetak. Sisanya terserah orang-orang yang ikut memegangnya.</p>
+        <p class="eyebrow">One <em>&mdash;</em> the dog</p>
+        <h2>Not a protocol.<br>Just a dog.</h2>
+        <p>InkBull has no yield, no vault, and no whitepaper thick enough to prop a door open.</p>
+        <p>What it has is one bulldog printed like old tattoo flash: <strong>a black plate, a red plate, and a few pixels of misalignment</strong> &mdash; the look of a screen print pulled in a hurry. We left it that way. That is the mark.</p>
+        <p>It launches on a bonding curve through InkyPump, so there is <strong>no presale and no private allocation</strong>. Everyone buys from the same curve at the same price at the same moment.</p>
       </div>
       <div class="usage">
         <figure class="u-paper">
@@ -407,82 +340,85 @@ a{color:inherit}
             <svg class="plate-ink" viewBox="0 0 220 250" aria-hidden="true"><use href="#bull"/></svg>
           </span>
         </figure>
-        <figcaption>Tiga latar yang aman untuk logo</figcaption>
+        <figcaption>Three approved backgrounds</figcaption>
       </div>
     </div>
   </section>
 
-  <section class="wrap band reveal" id="spek">
-    <p class="eyebrow">Bagian dua <em>&mdash;</em> angkanya</p>
-    <h2>Spesifikasi cetak</h2>
+  <section class="wrap band reveal" id="launch">
+    <p class="eyebrow">Two <em>&mdash;</em> the facts</p>
+    <h2>Launch details</h2>
     <dl class="specs">
       <div>
-        <dt>Pasokan</dt>
-        <dd>1.000.000.000<small>Dicetak sekali. Tidak bisa ditambah.</small></dd>
+        <dt>Network</dt>
+        <dd>Robinhood Chain<small>Arbitrum Orbit L2 settling to Ethereum. Chain ID 4663. Gas is paid in ETH.</small></dd>
       </div>
       <div>
-        <dt>Pajak beli / jual</dt>
-        <dd>0 / 0<small>Tidak ada potongan di setiap transaksi.</small></dd>
+        <dt>Launchpad</dt>
+        <dd>InkyPump<small>Bonding-curve launchpad by InkyLabs, running at inkypump.com/robinhood.</small></dd>
       </div>
       <div>
-        <dt>Likuiditas</dt>
-        <dd>Dibakar<small>Kunci LP dikirim ke alamat mati.</small></dd>
+        <dt>Distribution</dt>
+        <dd>Bonding curve<small>No presale, no private round. Price is set by the curve as people buy and sell.</small></dd>
       </div>
       <div>
-        <dt>Kepemilikan kontrak</dt>
-        <dd>Dilepas<small>Tidak ada yang bisa mengubah aturannya.</small></dd>
+        <dt>Trading fee</dt>
+        <dd>2% &rarr; 0.1%<small>2% while on the curve. Drops to 0.1% once the token bonds to its Uniswap V4 pool.</small></dd>
       </div>
     </dl>
-    <p style="margin-top:24px;font-size:14px;color:var(--ink-soft);max-width:60ch">
-      Jangan percaya baris di atas begitu saja. Buka kontraknya di block explorer dan periksa sendiri sebelum menyentuh tombol beli.
+    <p class="note">
+      <b>Check this yourself.</b> Supply, target raise, and the creator fee split are set at launch and shown on the InkyPump token page &mdash; read them there rather than trusting this site. InkyPump's published docs describe its Ink mainnet deployment, so confirm the Robinhood Chain contract addresses on the token page and on the explorer before you trade.
     </p>
   </section>
 
-  <section class="wrap band reveal" id="cara-beli">
-    <p class="eyebrow">Bagian tiga <em>&mdash;</em> urutannya</p>
-    <h2>Cara beli</h2>
+  <section class="wrap band reveal" id="how-to-buy">
+    <p class="eyebrow">Three <em>&mdash;</em> the order</p>
+    <h2>How to buy</h2>
     <ol class="steps">
       <li>
-        <b>Langkah 01</b>
-        <h3>Siapkan dompet</h3>
-        <p>Pasang dompet kripto di ponsel atau peramban, lalu simpan frasa pemulihannya di luar perangkat.</p>
+        <b>Step 01</b>
+        <h3>Add the network</h3>
+        <p>Add Robinhood Chain to any EVM wallet. Chain ID must read <strong>4663</strong>. If it reads anything else, stop.</p>
       </li>
       <li>
-        <b>Langkah 02</b>
-        <h3>Isi saldo</h3>
-        <p>Kirim koin jaringan ke dompet itu. Sisakan sedikit untuk biaya gas.</p>
+        <b>Step 02</b>
+        <h3>Fund it with ETH</h3>
+        <p>Bridge ETH to Robinhood Chain. Gas is plain ETH &mdash; there is no separate gas coin to buy.</p>
       </li>
       <li>
-        <b>Langkah 03</b>
-        <h3>Tukar ke $INK</h3>
-        <p>Buka DEX, tempel alamat kontrak di atas, cocokkan karakternya, lalu tukar.</p>
+        <b>Step 03</b>
+        <h3>Open the token page</h3>
+        <p>Go to InkyPump on Robinhood Chain, paste the contract address above, and check every character against it.</p>
       </li>
       <li>
-        <b>Langkah 04</b>
-        <h3>Simpan</h3>
-        <p>Token muncul di dompet Anda. Setelah ini tidak ada yang perlu dikerjakan.</p>
+        <b>Step 04</b>
+        <h3>Buy on the curve</h3>
+        <p>Enter an ETH amount. The preview shows expected tokens, the fee, and price impact. Sign it.</p>
       </li>
     </ol>
+    <p class="note">
+      <b>Two ways people lose money here.</b> Fake token pages that copy the name and image but carry a different contract address &mdash; always match the full address. And any prompt asking you to buy a special Robinhood Chain gas token: no such token exists, so that prompt is a scam.
+    </p>
   </section>
 
-  <section class="wrap band reveal" id="fase">
-    <p class="eyebrow">Bagian empat <em>&mdash;</em> apa yang terjadi berikutnya</p>
-    <h2>Tiga fase</h2>
+  <section class="wrap band reveal" id="lifecycle">
+    <p class="eyebrow">Four <em>&mdash;</em> what happens next</p>
+    <h2>Token lifecycle</h2>
     <div class="phases">
       <article>
-        <span class="tag">Fase 01</span>
-        <h3>Cetak</h3>
-        <p>Token dibuat, likuiditas ditambahkan, kunci LP dibakar, kepemilikan kontrak dilepas.</p>
+        <span class="tag">Stage 01</span>
+        <h3>On the curve</h3>
+        <p>Price follows the bonding curve. Anyone can buy or sell at any time. The 2% fee applies to every trade.</p>
       </article>
       <article>
-        <span class="tag">Fase 02</span>
-        <h3>Keringkan</h3>
-        <p>Pendaftaran di agregator grafik, kanal komunitas dibuka, meme mulai beredar sendiri.</p>
+        <span class="tag">Stage 02</span>
+        <h3>The bond</h3>
+        <p>Once the curve raises its ETH target, liquidity migrates into a Uniswap V4 pool paired with WETH. It happens in a single transaction, with no price jump.</p>
       </article>
       <article>
-        <span class="tag">Fase 03</span>
-        <h3>Apa pun kata grup</h3>
-        <p>Tidak ada janji bursa besar di sini. Yang berikutnya diputuskan orang-orang yang masih bertahan.</p>
+        <span class="tag">Stage 03</span>
+        <h3>On the pool</h3>
+        <p>The curve stops accepting trades and everything moves to the V4 pool. The fee drops to 0.1%. After that, nothing is scheduled.</p>
       </article>
     </div>
   </section>
@@ -492,12 +428,12 @@ a{color:inherit}
       <svg class="plate-flash" viewBox="0 0 220 250" aria-hidden="true"><use href="#bull"/></svg>
       <svg class="plate-ink" viewBox="0 0 220 250" aria-hidden="true"><use href="#bull"/></svg>
     </span>
-    <h2>Masuk ke kandang</h2>
-    <p>Semua yang terjadi pada InkBull terjadi di grup. Datang, lihat sendiri, putuskan sendiri.</p>
+    <h2>Get in the kennel</h2>
+    <p>Everything that happens to InkBull happens in the group chat. Come look for yourself before you decide anything.</p>
     <div class="socials">
       <a class="btn" href="#" rel="noopener">X / Twitter</a>
       <a class="btn btn-ghost" href="#" rel="noopener">Telegram</a>
-      <a class="btn btn-ghost" href="#" rel="noopener">Dexscreener</a>
+      <a class="btn btn-ghost" href="https://inkypump.com/robinhood" target="_blank" rel="noopener">InkyPump</a>
     </div>
   </section>
 </main>
@@ -511,12 +447,12 @@ a{color:inherit}
       </span>
       <b>InkBull</b>
     </a>
-    <span class="eyebrow" style="margin:0">$INK</span>
+    <span class="eyebrow" style="margin:0">$INK &bull; Robinhood Chain</span>
   </div>
   <p class="risk">
-    <b>Risiko.</b> $INK adalah meme coin. Tidak ada produk di baliknya, tidak ada pendapatan, dan tidak ada pihak yang berjanji harganya akan naik. Nilainya bisa jatuh ke nol kapan saja. Ini bukan nasihat keuangan &mdash; anggap seluruh uang yang Anda masukkan bisa hilang.
+    <b>Risk.</b> $INK is a meme coin. There is no product behind it, no revenue, and nobody promising the price will go up. It can go to zero at any time, and a bonding curve does not change that. This site is not financial advice and is not affiliated with Robinhood Markets, Inc. or with InkyLabs. Assume every rupiah you put in can disappear.
   </p>
-  <p class="foot-note">Dicetak sekali &bull; tidak ada pelat kedua</p>
+  <p class="foot-note">Printed once &bull; no second plate</p>
 </footer>
 
 <script>
@@ -525,8 +461,8 @@ a{color:inherit}
   var val = document.getElementById('ca-value');
   if(btn && val){
     btn.addEventListener('click', function(){
-      var done = function(){ btn.textContent = 'Tersalin'; setTimeout(function(){ btn.textContent = 'Salin'; }, 1600); };
-      var fail = function(){ btn.textContent = 'Gagal — salin manual'; setTimeout(function(){ btn.textContent = 'Salin'; }, 2400); };
+      var done = function(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy'; }, 1600); };
+      var fail = function(){ btn.textContent = 'Copy it manually'; setTimeout(function(){ btn.textContent = 'Copy'; }, 2400); };
       if(navigator.clipboard && navigator.clipboard.writeText){
         navigator.clipboard.writeText(val.textContent.trim()).then(done).catch(fail);
       } else { fail(); }
