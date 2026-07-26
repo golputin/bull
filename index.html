@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>InkBull — $BULL on Robinhood Chain</title>
-<meta name="description" content="InkBull. Short legs, long conviction. A fair-launch meme token launching on InkyPump, Robinhood Chain.">
+<meta name="description" content="InkBull. Short legs, long conviction. A fixed-supply meme token launched on pons, Robinhood Chain.">
 
 <!-- ============================================================
      Open Graph / Twitter Card
@@ -14,7 +14,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="InkBull">
 <meta property="og:title" content="InkBull — $BULL on Robinhood Chain">
-<meta property="og:description" content="Short legs, long conviction. A fair-launch meme token on InkyPump.">
+<meta property="og:description" content="Short legs, long conviction. A fixed-supply meme token launched on pons.">
 <meta property="og:url" content="https://YOURDOMAIN.com/">
 <meta property="og:image" content="https://YOURDOMAIN.com/inkbull-og.png">
 <meta property="og:image:width" content="1200">
@@ -24,7 +24,7 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="InkBull — $BULL on Robinhood Chain">
-<meta name="twitter:description" content="Short legs, long conviction. A fair-launch meme token on InkyPump.">
+<meta name="twitter:description" content="Short legs, long conviction. A fixed-supply meme token launched on pons.">
 <meta name="twitter:image" content="https://YOURDOMAIN.com/inkbull-og.png">
 <meta name="twitter:image:alt" content="The InkBull bulldog mark, printed in black and red on newsprint.">
 <!-- <meta name="twitter:site" content="@yourhandle"> -->
@@ -394,11 +394,12 @@ a{color:inherit}
     </a>
     <div class="nav-links">
       <a href="#the-dog">The dog</a>
+      <a href="game.html">Arcade</a>
       <a href="#stamp">Stamp booth</a>
       <a href="#launch">Launch</a>
       <a href="#how-to-buy">How to buy</a>
       <a href="#lifecycle">Lifecycle</a>
-      <a class="btn btn-sm" href="https://inkypump.com/robinhood" target="_blank" rel="noopener">Buy $BULL</a>
+      <a class="btn btn-sm" href="https://www.ponsfamily.com/launchpad" target="_blank" rel="noopener">Buy $BULL</a>
     </div>
   </nav>
 </div>
@@ -413,8 +414,8 @@ a{color:inherit}
   <p class="hero-lede">A bulldog pressed onto Robinhood Chain and left to dry. Nobody gets to wipe it off.</p>
   <p class="eyebrow" style="margin-bottom:28px">Ticker <em>$BULL</em> &nbsp;&bull;&nbsp; Robinhood Chain &nbsp;&bull;&nbsp; Chain ID 4663</p>
   <div class="hero-cta">
-    <a class="btn" href="https://inkypump.com/robinhood" target="_blank" rel="noopener">Buy on InkyPump</a>
-    <a class="btn btn-ghost" href="https://robinscan.io/" target="_blank" rel="noopener">Check the contract</a>
+    <a class="btn" href="https://www.ponsfamily.com/launchpad" target="_blank" rel="noopener">Buy on pons</a>
+    <a class="btn btn-ghost" href="https://robinhoodchain.blockscout.com" target="_blank" rel="noopener">Check the contract</a>
   </div>
   <div class="ca">
     <span class="ca-label">Contract</span>
@@ -426,7 +427,7 @@ a{color:inherit}
     <div class="live-grid">
       <div class="live-cell"><span class="live-k">Market cap</span><span class="live-v" id="lv-mcap">&mdash;</span></div>
       <div class="live-cell"><span class="live-k">Price</span><span class="live-v" id="lv-price">&mdash;</span></div>
-      <div class="live-cell"><span class="live-k">Curve</span><span class="live-v" id="lv-curve">&mdash;</span></div>
+      <div class="live-cell"><span class="live-k">Graduation</span><span class="live-v" id="lv-curve">&mdash;</span></div>
       <div class="live-cell"><span class="live-k">Status</span><span class="live-v" id="lv-status">&mdash;</span></div>
     </div>
     <div class="live-bar"><i id="lv-fill"></i></div>
@@ -449,7 +450,7 @@ a{color:inherit}
         <h2>Not a protocol.<br>Just a dog.</h2>
         <p>InkBull has no yield, no vault, and no whitepaper thick enough to prop a door open.</p>
         <p>What it has is one bulldog printed like old tattoo flash: <strong>a black plate, a red plate, and a few pixels of misalignment</strong> &mdash; the look of a screen print pulled in a hurry. We left it that way. That is the mark.</p>
-        <p>It launches on a bonding curve through InkyPump, so there is <strong>no presale and no private allocation</strong>. Everyone buys from the same curve at the same price at the same moment.</p>
+        <p>It launched through pons, which means the token and its trading pool went live in <strong>one transaction with the liquidity locked automatically</strong>. Fixed supply, no second mint, nothing held back for a team.</p>
       </div>
       <div class="usage">
         <figure class="u-paper">
@@ -530,19 +531,22 @@ a{color:inherit}
       </div>
       <div>
         <dt>Launchpad</dt>
-        <dd>InkyPump<small>Bonding-curve launchpad by InkyLabs, running at inkypump.com/robinhood.</small></dd>
+        <dd>pons<small>Fixed-supply launches on Robinhood Chain, at ponsfamily.com/launchpad.</small></dd>
       </div>
       <div>
-        <dt>Distribution</dt>
-        <dd>Bonding curve<small>No presale, no private round. Price is set by the curve as people buy and sell.</small></dd>
+        <dt>Supply</dt>
+        <dd>1,000,000,000<small>Fixed at creation. No bonding curve and no later migration.</small></dd>
       </div>
       <div>
-        <dt>Trading fee</dt>
-        <dd>2% &rarr; 0.1%<small>2% while on the curve. Drops to 0.1% once the token bonds to its Uniswap V4 pool.</small></dd>
+        <dt>Pool fee</dt>
+        <dd>1%<small>Charged on every trade in the WETH pool, split between creator and protocol.</small></dd>
       </div>
     </dl>
     <p class="note">
-      <b>Check this yourself.</b> Supply, target raise, and the creator fee split are set at launch and shown on the InkyPump token page &mdash; read them there rather than trusting this site. InkyPump's published docs describe its Ink mainnet deployment, so confirm the Robinhood Chain contract addresses on the token page and on the explorer before you trade.
+      <b>Check this yourself.</b> Every number above is readable on chain. pons publishes its factory and pool
+      addresses, and the numbers in the strip at the top of this page are read straight from those contracts rather
+      than typed in by hand. Names and images can be copied by anyone &mdash; the contract address is the only thing
+      that identifies this token.
     </p>
   </section>
 
@@ -563,12 +567,12 @@ a{color:inherit}
       <li>
         <b>Step 03</b>
         <h3>Open the token page</h3>
-        <p>Go to InkyPump on Robinhood Chain, paste the contract address above, and check every character against it.</p>
+        <p>Open pons, paste the contract address above, and check every character against it before anything else.</p>
       </li>
       <li>
         <b>Step 04</b>
-        <h3>Buy on the curve</h3>
-        <p>Enter an ETH amount. The preview shows expected tokens, the fee, and price impact. Sign it.</p>
+        <h3>Swap for $BULL</h3>
+        <p>Enter an ETH amount. Check the price impact and slippage in the preview, then sign in your wallet.</p>
       </li>
     </ol>
     <p class="note">
@@ -582,19 +586,44 @@ a{color:inherit}
     <div class="phases">
       <article>
         <span class="tag">Stage 01</span>
-        <h3>On the curve</h3>
-        <p>Price follows the bonding curve. Anyone can buy or sell at any time. The 2% fee applies to every trade.</p>
+        <h3>Create</h3>
+        <p>The token is minted with a fixed supply and its WETH pool goes live in the same transaction. The liquidity is locked automatically.</p>
       </article>
       <article>
         <span class="tag">Stage 02</span>
-        <h3>The bond</h3>
-        <p>Once the curve raises its ETH target, liquidity migrates into a Uniswap V4 pool paired with WETH. It happens in a single transaction, with no price jump.</p>
+        <h3>Trade</h3>
+        <p>Buys and sells run against WETH in that locked pool and move the price. For the first two blocks, launch limits cap what any one wallet can take.</p>
       </article>
       <article>
         <span class="tag">Stage 03</span>
-        <h3>On the pool</h3>
-        <p>The curve stops accepting trades and everything moves to the V4 pool. The fee drops to 0.1%. After that, nothing is scheduled.</p>
+        <h3>Graduate</h3>
+        <p>Once enough WETH is paired, the launch graduates. Nothing migrates &mdash; trading carries on in the same pool. It marks a threshold, not quality.</p>
       </article>
+    </div>
+  </section>
+
+  <section class="wrap band reveal" id="arcade">
+    <p class="eyebrow">Six <em>&mdash;</em> the arcade</p>
+    <div class="two-col">
+      <div class="prose">
+        <h2>Press Run</h2>
+        <p>One button. One bulldog. A sheet of paper moving faster than it should.</p>
+        <p>Hop the ink blots, clear the press rollers, grab the red drops. Speed climbs until you jam
+          the machine. Scores go on a shared board, so you are running against everyone else who found
+          this page.</p>
+        <p style="margin-bottom:28px"><strong>It has nothing to do with the token.</strong> No rewards, no
+          holder perks, no unlocks. It is there because it is fun.</p>
+        <a class="btn" href="game.html">Play Press Run</a>
+      </div>
+      <div class="usage" style="grid-template-columns:1fr">
+        <figure class="u-paper" style="aspect-ratio:16/10">
+          <span class="stamp" style="width:46%">
+            <svg class="plate-flash" viewBox="0 0 220 250" aria-hidden="true"><use href="#bull"/></svg>
+            <svg class="plate-ink" viewBox="0 0 220 250" aria-hidden="true"><use href="#bull"/></svg>
+          </span>
+        </figure>
+        <figcaption style="grid-column:span 1">The runner is the mark itself</figcaption>
+      </div>
     </div>
   </section>
 
@@ -608,7 +637,7 @@ a{color:inherit}
     <div class="socials">
       <a class="btn" href="#" rel="noopener">X / Twitter</a>
       <a class="btn btn-ghost" href="#" rel="noopener">Telegram</a>
-      <a class="btn btn-ghost" href="https://inkypump.com/robinhood" target="_blank" rel="noopener">InkyPump</a>
+      <a class="btn btn-ghost" href="https://www.ponsfamily.com/launchpad" target="_blank" rel="noopener">pons</a>
     </div>
   </section>
 </main>
@@ -625,7 +654,10 @@ a{color:inherit}
     <span class="eyebrow" style="margin:0">$BULL &bull; Robinhood Chain</span>
   </div>
   <p class="risk">
-    <b>Risk.</b> $BULL is a meme coin. There is no product behind it, no revenue, and nobody promising the price will go up. It can go to zero at any time, and a bonding curve does not change that. This site is not financial advice and is not affiliated with Robinhood Markets, Inc. or with InkyLabs. Assume every rupiah you put in can disappear.
+    <b>Risk.</b> $BULL is a meme coin. There is no product behind it, no revenue, and nobody promising the price
+    will go up. It can go to zero at any time, and locked liquidity does not change that. Graduation is a threshold,
+    not a quality signal. This site is not financial advice. It is an independent project and is not affiliated with,
+    endorsed by, or operated by Pons Labs, LLC or Robinhood Markets, Inc. Assume everything you put in can disappear.
   </p>
   <p class="foot-note">Printed once &bull; no second plate</p>
 </footer>
@@ -889,53 +921,88 @@ a{color:inherit}
 })();
 </script>
 <script>
-/* ------------------------------------------------------------------------
-   Live numbers, read straight from InkyPump.
+/* ---------------------------------------------------------------------------
+   Live numbers, read straight off Robinhood Chain.
+
+   No indexer, no private API, no proxy. Three eth_call requests against the
+   public RPC, which is why these numbers cannot be edited by hand:
+
+     1. graduationStatus(address)  on the pons factory -> paired, threshold, done
+     2. liquidityPool()            on the token        -> its Uniswap V3 pool
+     3. slot0()                    on that pool        -> sqrtPriceX96, live price
 
    The contract address is read from the #ca-value element above, so there is
-   only ONE place in this file to change it.
-
-   API: GET https://inkypump.com/api/token?address=0x...
-   That path is the one InkyPump documents for its Ink deployment. If the
-   Robinhood Chain deployment answers on a different path, change API_BASE.
-   If the browser is blocked by CORS, the strip says so and you can point
-   API_BASE at a small proxy of your own instead.
-   ------------------------------------------------------------------------ */
+   only ONE place in this file to change it when the token goes live.
+   --------------------------------------------------------------------------- */
 (function(){
-  var API_BASE = 'https://inkypump.com/api/token';
+  var RPC      = 'https://rpc.mainnet.chain.robinhood.com';
+  var FACTORY  = '0xA5aAb3F0c6EeadF30Ef1D3Eb997108E976351feB';  // pons active factory
+  var WETH     = '0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73';
+  var SUPPLY   = 1e9;          // pons mints a fixed one billion for every launch
   var REFRESH_MS = 30000;
+
+  /* first 4 bytes of keccak256(signature) */
+  var SEL_GRADUATION = '0x98d652f1';   // graduationStatus(address)
+  var SEL_POOL       = '0x665a11ca';   // liquidityPool()
+  var SEL_SLOT0      = '0x3850c7bd';   // slot0()
+
   var PLACEHOLDER = /^0x0+$/i;
+  var ZERO_ADDR = '0x0000000000000000000000000000000000000000';
 
   var box = document.getElementById('live');
-  if(!box) return;
+  if(!box || typeof BigInt === 'undefined') return;
 
   var el = {
-    mcap: document.getElementById('lv-mcap'),
-    price: document.getElementById('lv-price'),
-    curve: document.getElementById('lv-curve'),
+    mcap:   document.getElementById('lv-mcap'),
+    price:  document.getElementById('lv-price'),
+    curve:  document.getElementById('lv-curve'),
     status: document.getElementById('lv-status'),
-    fill: document.getElementById('lv-fill'),
-    foot: document.getElementById('lv-foot')
+    fill:   document.getElementById('lv-fill'),
+    foot:   document.getElementById('lv-foot')
   };
   var caEl = document.getElementById('ca-value');
   var address = caEl ? caEl.textContent.trim() : '';
-  var lastOk = 0;
-  var timer = null;
+  var lastOk = 0, rpcId = 0, timer = null;
 
-  function setState(name){
-    box.className = 'live' + (name ? ' is-' + name : '');
-  }
+  function setState(name){ box.className = 'live' + (name ? ' is-' + name : ''); }
   function dash(){
     el.mcap.textContent = el.price.textContent = '\u2014';
     el.curve.textContent = el.status.textContent = '\u2014';
   }
 
-  /* small numbers without exponent notation */
+  function pad(addr){
+    var h = addr.replace(/^0x/, '').toLowerCase();
+    while(h.length < 64) h = '0' + h;
+    return h;
+  }
+  function word(hex, i){
+    return '0x' + hex.replace(/^0x/, '').substr(i * 64, 64);
+  }
+
+  function call(to, data){
+    return fetch(RPC, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0', id: ++rpcId, method: 'eth_call',
+        params: [{ to: to, data: data }, 'latest']
+      })
+    }).then(function(r){
+      if(!r.ok) throw new Error('rpc');
+      return r.json();
+    }).then(function(j){
+      if(j.error) throw new Error('revert');
+      if(!j.result || j.result === '0x') throw new Error('empty');
+      return j.result;
+    });
+  }
+
+  /* small numbers, no exponent notation */
   function fmtEth(v){
     if(typeof v !== 'number' || !isFinite(v)) return '\u2014';
     if(v === 0) return '0';
-    if(v >= 100) return v.toFixed(1).replace(/\.?0+$/, '');
-    if(v >= 1) return v.toFixed(3).replace(/\.?0+$/, '');
+    if(v >= 100)   return v.toFixed(1).replace(/\.?0+$/, '');
+    if(v >= 1)     return v.toFixed(3).replace(/\.?0+$/, '');
     if(v >= 0.001) return v.toFixed(6).replace(/0+$/, '');
     return v.toFixed(12).replace(/0+$/, '');
   }
@@ -946,26 +1013,26 @@ a{color:inherit}
     if(sec < 60) return sec + 's ago';
     return Math.round(sec / 60) + 'm ago';
   }
+  function tickFoot(){
+    if(lastOk) el.foot.textContent = 'Read from Robinhood Chain \u00b7 updated ' + ago(lastOk);
+  }
 
-  function paint(t){
-    var prog = typeof t.funding_progress === 'number'
-      ? Math.max(0, Math.min(1, t.funding_progress)) : null;
-    var bonded = prog !== null && prog >= 1;
-
-    el.mcap.textContent = typeof t.market_cap === 'number' ? fmtEth(t.market_cap) + ' ETH' : '\u2014';
-    el.price.textContent = typeof t.price_eth === 'number' ? fmtEth(t.price_eth) : '\u2014';
-    el.curve.textContent = prog === null ? '\u2014' : (prog * 100).toFixed(1) + '%';
-    el.status.textContent = prog === null ? '\u2014' : (bonded ? 'Bonded' : 'On the curve');
-    el.fill.style.width = prog === null ? '0%' : (prog * 100) + '%';
-
+  function paint(d){
+    el.price.textContent  = fmtEth(d.priceWeth);
+    el.mcap.textContent   = fmtEth(d.priceWeth * SUPPLY) + ' ETH';
+    el.curve.textContent  = d.progress === null ? '\u2014' : (d.progress * 100).toFixed(1) + '%';
+    el.status.textContent = d.graduated ? 'Graduated' : 'Trading';
+    el.fill.style.width   = d.progress === null ? '0%' : Math.min(100, d.progress * 100) + '%';
     lastOk = Date.now();
     setState('live');
     tickFoot();
   }
 
-  function tickFoot(){
-    if(!lastOk) return;
-    el.foot.textContent = 'Live from InkyPump \u00b7 updated ' + ago(lastOk);
+  function fail(msg){
+    if(lastOk) return;              // keep the last good read on screen
+    setState('error');
+    dash();
+    el.foot.textContent = msg;
   }
 
   function load(){
@@ -976,40 +1043,38 @@ a{color:inherit}
       return;
     }
 
-    fetch(API_BASE + '?address=' + encodeURIComponent(address), { headers: { 'accept': 'application/json' } })
-      .then(function(r){
-        if(r.status === 404) throw new Error('unknown');
-        if(!r.ok) throw new Error('http');
-        return r.json();
-      })
-      .then(function(t){
-        if(!t || typeof t !== 'object') throw new Error('shape');
-        paint(t);
-      })
-      .catch(function(err){
-        if(lastOk) return;               // keep the last good numbers on screen
-        setState('error');
-        dash();
-        el.foot.textContent = err.message === 'unknown'
-          ? 'InkyPump has no record of this address yet'
-          : 'Could not reach InkyPump from this page';
+    Promise.all([
+      call(FACTORY, SEL_GRADUATION + pad(address)),
+      call(address, SEL_POOL)
+    ]).then(function(res){
+      var g = res[0];
+      var paired    = BigInt(word(g, 0));
+      var threshold = BigInt(word(g, 1));
+      var graduated = BigInt(word(g, 2)) !== BigInt(0);
+      var progress  = threshold > BigInt(0) ? Number(paired) / Number(threshold) : null;
+
+      var pool = '0x' + word(res[1], 0).slice(-40);
+      if(pool === ZERO_ADDR) throw new Error('nopool');
+
+      return call(pool, SEL_SLOT0).then(function(s0){
+        /* price = (sqrtPriceX96 / 2^96)^2, inverted when the token is not token0 */
+        var ratio = Number(BigInt(word(s0, 0))) / Math.pow(2, 96);
+        var token1PerToken0 = ratio * ratio;
+        var isToken0 = address.toLowerCase() < WETH.toLowerCase();
+        var priceWeth = isToken0 ? token1PerToken0 : 1 / token1PerToken0;
+        paint({ priceWeth: priceWeth, progress: progress, graduated: graduated });
       });
+    }).catch(function(err){
+      var m = err && err.message;
+      fail(m === 'revert' || m === 'empty' || m === 'nopool'
+        ? 'This address is not a pons launch'
+        : 'Could not reach Robinhood Chain from this page');
+    });
   }
 
-  function schedule(){
-    clearInterval(timer);
-    timer = setInterval(function(){
-      if(!document.hidden) load();
-      tickFoot();
-    }, REFRESH_MS);
-  }
-
-  document.addEventListener('visibilitychange', function(){
-    if(!document.hidden) load();
-  });
-
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden) load(); });
+  timer = setInterval(function(){ if(!document.hidden) load(); tickFoot(); }, REFRESH_MS);
   load();
-  schedule();
 })();
 </script>
 </body>
