@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Latar belakang InkBull">
+  <title>Latar InkBull — kertas cetak</title>
+
+  <defs>
+    <pattern id="halftone" width="18" height="18" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="1.6" fill="#17140F" opacity=".16"/>
+      <circle cx="12" cy="12" r="1.6" fill="#D9342B" opacity=".12"/>
+    </pattern>
+
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+
+    <g id="bg-bull">
+      <path d="M110 28C142 28 168 38 179 52L198 38C207 50 205 72 193 80C198 96 200 112 197 128C192 170 162 196 110 196C58 196 28 170 23 128C20 112 22 96 27 80C15 72 13 50 22 38L41 52C52 38 78 28 110 28Z"/>
+      <path d="M110 114C126 114 137 122 137 131C137 141 125 146 110 146C95 146 83 141 83 131C83 122 94 114 110 114Z"/>
+      <path d="M46 189C70 208 150 208 174 189L182 210C152 232 68 232 38 210Z"/>
+    </g>
+  </defs>
+
+  <!-- Kertas -->
+  <rect width="1600" height="900" fill="#D8D3C3"/>
+
+  <!-- Cap bulldog raksasa, sangat samar -->
+  <g opacity=".07" fill="#17140F">
+    <use href="#bg-bull" transform="translate(1090 60) scale(3.1)"/>
+  </g>
+
+  <!-- Halftone -->
+  <rect width="1600" height="900" fill="url(#halftone)"/>
+
+  <!-- Serat kertas -->
+  <rect width="1600" height="900" filter="url(#grain)" opacity=".28" style="mix-blend-mode:multiply"/>
+
+  <!-- Tanda potong pelat cetak -->
+  <g stroke="#D9342B" stroke-width="2" opacity=".75">
+    <path d="M40 56h44M62 34v44"/>
+    <path d="M1516 56h44M1538 34v44"/>
+    <path d="M40 844h44M62 822v44"/>
+    <path d="M1516 844h44M1538 822v44"/>
+  </g>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 250" width="440" height="500" role="img" aria-label="Logo InkBull">
+  <title>InkBull</title>
+  <desc>Kepala bulldog gaya cetak flash tato, dengan pelat merah yang sengaja meleset.</desc>
+
+  <defs>
+    <g id="bull-art">
+      <path fill="currentColor" d="M110 28C142 28 168 38 179 52L198 38C207 50 205 72 193 80C198 96 200 112 197 128C192 170 162 196 110 196C58 196 28 170 23 128C20 112 22 96 27 80C15 72 13 50 22 38L41 52C52 38 78 28 110 28Z"/>
+      <path fill="var(--paper,#D8D3C3)" d="M26 46L41 58L30 68Z"/>
+      <path fill="var(--paper,#D8D3C3)" d="M194 46L179 58L190 68Z"/>
+      <path fill="var(--paper,#D8D3C3)" d="M110 105C139 105 162 123 162 145C162 169 139 185 110 185C81 185 58 169 58 145C58 123 81 105 110 105Z"/>
+      <path fill="var(--paper,#D8D3C3)" d="M78 76C88 76 96 83 96 90C96 97 88 102 78 102C68 102 60 97 60 90C60 83 68 76 78 76Z"/>
+      <path fill="var(--paper,#D8D3C3)" d="M142 76C152 76 160 83 160 90C160 97 152 102 142 102C132 102 124 97 124 90C124 83 132 76 142 76Z"/>
+      <circle fill="currentColor" cx="80" cy="92" r="7.5"/>
+      <circle fill="currentColor" cx="140" cy="92" r="7.5"/>
+      <g fill="none" stroke="var(--paper,#D8D3C3)" stroke-width="5" stroke-linecap="round">
+        <path d="M100 98C97 86 96 74 99 62"/>
+        <path d="M110 100C110 86 110 74 110 62"/>
+        <path d="M120 98C123 86 124 74 121 62"/>
+      </g>
+      <path fill="currentColor" d="M110 114C126 114 137 122 137 131C137 141 125 146 110 146C95 146 83 141 83 131C83 122 94 114 110 114Z"/>
+      <ellipse fill="var(--paper,#D8D3C3)" cx="99" cy="129" rx="3" ry="4.5"/>
+      <ellipse fill="var(--paper,#D8D3C3)" cx="121" cy="129" rx="3" ry="4.5"/>
+      <g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round">
+        <path d="M110 146V157"/>
+        <path d="M110 157C96 157 84 163 70 159"/>
+        <path d="M110 157C124 157 136 163 150 159"/>
+      </g>
+      <path fill="var(--paper,#D8D3C3)" d="M84 167L88 151L92 167Z"/>
+      <path fill="var(--paper,#D8D3C3)" d="M128 167L132 151L136 167Z"/>
+      <path fill="currentColor" d="M46 189C70 208 150 208 174 189L182 210C152 232 68 232 38 210Z"/>
+      <path fill="var(--paper,#D8D3C3)" d="M110 203L117 213L110 223L103 213Z"/>
+      <path fill="var(--paper,#D8D3C3)" d="M72 199L78 208L72 217L66 208Z"/>
+      <path fill="var(--paper,#D8D3C3)" d="M148 199L154 208L148 217L142 208Z"/>
+      <path fill="currentColor" d="M92 226C92 226 86 236 86 240C86 244 89 246 92 246C95 246 98 244 98 240C98 236 92 226 92 226Z"/>
+      <path fill="currentColor" d="M132 222C132 222 127 231 127 234C127 238 129 240 132 240C135 240 137 238 137 234C137 231 132 222 132 222Z"/>
+    </g>
+  </defs>
+
+  <!-- Pelat merah, sengaja meleset -->
+  <use href="#bull-art" color="#D9342B" transform="translate(-6 5) rotate(-1.2 110 125)" style="mix-blend-mode:multiply"/>
+
+  <!-- Pelat hitam -->
+  <use href="#bull-art" color="#17140F"/>
+</svg>
