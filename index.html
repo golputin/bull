@@ -232,6 +232,29 @@ a{color:inherit}
 .risk b{color:var(--ink)}
 .foot-note{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-top:26px}
 
+/* ---------- STAMP BOOTH ---------- */
+.booth{display:grid;grid-template-columns:1fr 296px;gap:clamp(24px,4vw,44px);align-items:start}
+@media (max-width:840px){.booth{grid-template-columns:1fr}}
+.booth-stage{position:relative;border:2px solid var(--ink);background:var(--paper-deep);line-height:0}
+.booth-stage canvas{display:block;width:100%;height:auto}
+.booth-stage.is-drag{outline:3px solid var(--flash);outline-offset:-3px}
+.booth-empty{
+  position:absolute;inset:20px;display:grid;place-content:center;gap:10px;
+  text-align:center;padding:22px;border:2px dashed rgba(23,20,15,.42);line-height:1.5;
+}
+.booth-empty.is-hidden{display:none}
+.booth-empty p{margin:0;font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.booth-empty .booth-hint{font-family:var(--font-body);font-size:14px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--ink-soft)}
+.ctrl{display:block;margin-bottom:22px}
+.ctrl span{display:block;font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:9px}
+.ctrl input[type=range]{width:100%;accent-color:var(--flash)}
+.chk{display:flex;align-items:center;gap:10px;margin-bottom:13px;font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.chk input{width:17px;height:17px;accent-color:var(--flash);margin:0}
+.booth-actions{display:flex;flex-direction:column;gap:12px;margin-top:26px}
+.booth-actions .btn{width:100%}
+.btn[disabled]{opacity:.42;cursor:not-allowed;box-shadow:none}
+.btn[disabled]:hover,.btn[disabled]:active{transform:none;box-shadow:none}
+
 @keyframes press{
   0%{opacity:0;transform:scale(1.22) rotate(2.5deg)}
   55%{opacity:1;transform:scale(.97) rotate(-1deg)}
@@ -303,6 +326,7 @@ a{color:inherit}
     </a>
     <div class="nav-links">
       <a href="#the-dog">The dog</a>
+      <a href="#stamp">Stamp booth</a>
       <a href="#launch">Launch</a>
       <a href="#how-to-buy">How to buy</a>
       <a href="#lifecycle">Lifecycle</a>
@@ -372,8 +396,53 @@ a{color:inherit}
     </div>
   </section>
 
+  <section class="wrap band reveal" id="stamp">
+    <p class="eyebrow">Two <em>&mdash;</em> the booth</p>
+    <h2>Put your face<br>through the press</h2>
+    <p class="prose" style="max-width:60ch;color:var(--ink-soft);margin-bottom:32px">
+      Drop in a photo and it comes back printed like the dog: two plates, one of them
+      misaligned, on newsprint. Give it the collar if you want. Save it, use it as your
+      avatar, or don't.
+    </p>
+
+    <div class="booth">
+      <div class="booth-stage" id="booth-stage">
+        <canvas id="booth-canvas" width="800" height="800" aria-label="Your photo, printed in the InkBull style"></canvas>
+        <div class="booth-empty" id="booth-empty">
+          <p>Drop a photo here</p>
+          <p class="booth-hint">Or use the button. Everything runs in your browser &mdash; the image is never uploaded anywhere.</p>
+        </div>
+      </div>
+
+      <div class="booth-controls">
+        <label class="ctrl">
+          <span>Ink coverage</span>
+          <input type="range" id="c-bias" min="-0.32" max="0.32" step="0.01" value="0">
+        </label>
+        <label class="ctrl">
+          <span>Misregistration</span>
+          <input type="range" id="c-off" min="0" max="26" step="1" value="10">
+        </label>
+        <label class="chk"><input type="checkbox" id="c-collar" checked><span>Spiked collar</span></label>
+        <label class="chk"><input type="checkbox" id="c-frame" checked><span>Press marks</span></label>
+
+        <div class="booth-actions">
+          <button class="btn" id="booth-pick" type="button">Choose photo</button>
+          <button class="btn btn-ghost" id="booth-dl" type="button" disabled>Download PNG</button>
+        </div>
+        <input type="file" id="booth-file" accept="image/*" hidden>
+      </div>
+    </div>
+
+    <p class="note">
+      <b>This is a toy, not a feature.</b> It does nothing on-chain, holding $BULL does not unlock
+      anything in it, and it is not a reason to buy the token. It exists because a bulldog printed
+      badly on newsprint is funnier when it is your face.
+    </p>
+  </section>
+
   <section class="wrap band reveal" id="launch">
-    <p class="eyebrow">Two <em>&mdash;</em> the facts</p>
+    <p class="eyebrow">Three <em>&mdash;</em> the facts</p>
     <h2>Launch details</h2>
     <dl class="specs">
       <div>
@@ -399,7 +468,7 @@ a{color:inherit}
   </section>
 
   <section class="wrap band reveal" id="how-to-buy">
-    <p class="eyebrow">Three <em>&mdash;</em> the order</p>
+    <p class="eyebrow">Four <em>&mdash;</em> the order</p>
     <h2>How to buy</h2>
     <ol class="steps">
       <li>
@@ -429,7 +498,7 @@ a{color:inherit}
   </section>
 
   <section class="wrap band reveal" id="lifecycle">
-    <p class="eyebrow">Four <em>&mdash;</em> what happens next</p>
+    <p class="eyebrow">Five <em>&mdash;</em> what happens next</p>
     <h2>Token lifecycle</h2>
     <div class="phases">
       <article>
@@ -458,8 +527,8 @@ a{color:inherit}
     <h2>Get in the kennel</h2>
     <p>Everything that happens to InkBull happens in the group chat. Come look for yourself before you decide anything.</p>
     <div class="socials">
-      <a class="btn" href="https://x.com/inkbullxyz" target="_blank" rel="noopener">X / Twitter</a>
-      <a class="btn btn-ghost" href="#" target="_blank" rel="noopener">Telegram (Soon)</a>
+      <a class="btn" href="#" rel="noopener">X / Twitter</a>
+      <a class="btn btn-ghost" href="#" rel="noopener">Telegram</a>
       <a class="btn btn-ghost" href="https://inkypump.com/robinhood" target="_blank" rel="noopener">InkyPump</a>
     </div>
   </section>
@@ -508,6 +577,206 @@ a{color:inherit}
     });
   }, { rootMargin: '0px 0px -12% 0px' });
   items.forEach(function(el){ io.observe(el); });
+})();
+</script>
+<script>
+/* ---------------- Stamp booth: client-side two-plate print ---------------- */
+(function(){
+  var canvas = document.getElementById('booth-canvas');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d', { willReadFrequently: true });
+  var S = 800;
+
+  var PAPER = '#D8D3C3', INK = [23,20,15], FLASH = [217,52,43];
+  var BAYER = [[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
+
+  var stage = document.getElementById('booth-stage');
+  var empty = document.getElementById('booth-empty');
+  var fileIn = document.getElementById('booth-file');
+  var pickBtn = document.getElementById('booth-pick');
+  var dlBtn = document.getElementById('booth-dl');
+  var biasIn = document.getElementById('c-bias');
+  var offIn = document.getElementById('c-off');
+  var collarIn = document.getElementById('c-collar');
+  var frameIn = document.getElementById('c-frame');
+
+  var srcData = null;   // ImageData of the square-cropped source
+  var queued = false;
+
+  /* --- reusable textures ------------------------------------------------ */
+  function halftonePattern(){
+    var p = document.createElement('canvas'); p.width = p.height = 16;
+    var c = p.getContext('2d');
+    c.fillStyle = 'rgba(23,20,15,.15)';
+    c.beginPath(); c.arc(3,3,1.7,0,6.284); c.fill();
+    c.fillStyle = 'rgba(217,52,43,.11)';
+    c.beginPath(); c.arc(11,11,1.7,0,6.284); c.fill();
+    return ctx.createPattern(p, 'repeat');
+  }
+  function grainPattern(){
+    var p = document.createElement('canvas'); p.width = p.height = 160;
+    var c = p.getContext('2d');
+    var d = c.createImageData(160,160), a = d.data;
+    for(var i=0;i<a.length;i+=4){
+      var v = 128 + (Math.random()-0.5)*150;
+      a[i]=a[i+1]=a[i+2]=v; a[i+3]=26;
+    }
+    c.putImageData(d,0,0);
+    return ctx.createPattern(p, 'repeat');
+  }
+  var HALFTONE = halftonePattern();
+  var GRAIN = grainPattern();
+
+  /* --- collar, reusing the mark's own path data ------------------------- */
+  var COLLAR = new Path2D("M46 189C70 208 150 208 174 189L182 210C152 232 68 232 38 210Z");
+  var DRIPS = [
+    new Path2D("M92 226C92 226 86 236 86 240C86 244 89 246 92 246C95 246 98 244 98 240C98 236 92 226 92 226Z"),
+    new Path2D("M132 222C132 222 127 231 127 234C127 238 129 240 132 240C135 240 137 238 137 234C137 231 132 222 132 222Z")
+  ];
+  var STUDS = [
+    new Path2D("M110 203L117 213L110 223L103 213Z"),
+    new Path2D("M72 199L78 208L72 217L66 208Z"),
+    new Path2D("M148 199L154 208L148 217L142 208Z")
+  ];
+
+  function drawCollar(dx, dy, inkColor, studColor){
+    var k = (S * 0.68) / 144;                 // collar spans x 38..182 in mark units
+    var tx = (S - S * 0.68) / 2 - 38 * k + dx;
+    var ty = (S - 30) - 246 * k + dy;         // drips end 30px above the bottom
+    ctx.save();
+    ctx.setTransform(k, 0, 0, k, tx, ty);
+    ctx.fillStyle = inkColor;
+    ctx.fill(COLLAR);
+    DRIPS.forEach(function(p){ ctx.fill(p); });
+    if(studColor){
+      ctx.fillStyle = studColor;
+      STUDS.forEach(function(p){ ctx.fill(p); });
+    }
+    ctx.restore();
+  }
+
+  /* --- build both plates in one pass ------------------------------------ */
+  function makePlates(bias){
+    var black = document.createElement('canvas'); black.width = black.height = S;
+    var red = document.createElement('canvas'); red.width = red.height = S;
+    var bctx = black.getContext('2d'), rctx = red.getContext('2d');
+    var bd = bctx.createImageData(S,S), rd = rctx.createImageData(S,S);
+    var s = srcData.data, b = bd.data, r = rd.data;
+
+    for(var y=0; y<S; y++){
+      var row = BAYER[y & 3];
+      for(var x=0; x<S; x++){
+        var i = (y*S + x) * 4;
+        var lum = (0.299*s[i] + 0.587*s[i+1] + 0.114*s[i+2]) / 255;
+        var v = (lum - 0.5) * 1.32 + 0.5 - bias;
+        if(v < (row[x & 3] + 0.5) / 16){
+          b[i]=INK[0];   b[i+1]=INK[1];   b[i+2]=INK[2];   b[i+3]=255;
+          r[i]=FLASH[0]; r[i+1]=FLASH[1]; r[i+2]=FLASH[2]; r[i+3]=255;
+        }
+      }
+    }
+    bctx.putImageData(bd,0,0); rctx.putImageData(rd,0,0);
+    return { black: black, red: red };
+  }
+
+  /* --- render ----------------------------------------------------------- */
+  function render(){
+    queued = false;
+    var off = parseInt(offIn.value, 10);
+
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = PAPER;
+    ctx.fillRect(0,0,S,S);
+
+    if(srcData){
+      var plates = makePlates(parseFloat(biasIn.value));
+      ctx.globalCompositeOperation = 'multiply';
+      ctx.drawImage(plates.red, -off, Math.round(off * 0.8));
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.drawImage(plates.black, 0, 0);
+    }
+
+    ctx.fillStyle = HALFTONE;
+    ctx.fillRect(0,0,S,S);
+
+    if(srcData && collarIn.checked){
+      drawCollar(-off, Math.round(off * 0.8), 'rgba(217,52,43,.92)', null);
+      drawCollar(0, 0, '#17140F', PAPER);
+    }
+
+    ctx.fillStyle = GRAIN;
+    ctx.fillRect(0,0,S,S);
+
+    if(srcData && frameIn.checked){
+      ctx.strokeStyle = '#D9342B';
+      ctx.lineWidth = 4;
+      [[30,30],[S-30,30],[30,S-30],[S-30,S-30]].forEach(function(p){
+        ctx.beginPath();
+        ctx.moveTo(p[0]-20, p[1]); ctx.lineTo(p[0]+20, p[1]);
+        ctx.moveTo(p[0], p[1]-20); ctx.lineTo(p[0], p[1]+20);
+        ctx.stroke();
+      });
+    }
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    requestAnimationFrame(render);
+  }
+
+  /* --- loading ---------------------------------------------------------- */
+  function loadFile(file){
+    if(!file || !/^image\//.test(file.type)) return;
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function(){
+      var tmp = document.createElement('canvas'); tmp.width = tmp.height = S;
+      var t = tmp.getContext('2d');
+      t.fillStyle = '#ffffff'; t.fillRect(0,0,S,S);
+      var k = Math.max(S / img.width, S / img.height);
+      var w = img.width * k, h = img.height * k;
+      t.drawImage(img, (S-w)/2, (S-h)/2, w, h);
+      srcData = t.getImageData(0,0,S,S);
+      URL.revokeObjectURL(url);
+      empty.classList.add('is-hidden');
+      dlBtn.disabled = false;
+      schedule();
+    };
+    img.onerror = function(){
+      URL.revokeObjectURL(url);
+      empty.classList.remove('is-hidden');
+      empty.firstElementChild.textContent = 'That file would not open';
+    };
+    img.src = url;
+  }
+
+  pickBtn.addEventListener('click', function(){ fileIn.click(); });
+  fileIn.addEventListener('change', function(e){ loadFile(e.target.files[0]); });
+
+  ['dragenter','dragover'].forEach(function(ev){
+    stage.addEventListener(ev, function(e){ e.preventDefault(); stage.classList.add('is-drag'); });
+  });
+  ['dragleave','drop'].forEach(function(ev){
+    stage.addEventListener(ev, function(e){ e.preventDefault(); stage.classList.remove('is-drag'); });
+  });
+  stage.addEventListener('drop', function(e){
+    if(e.dataTransfer && e.dataTransfer.files.length) loadFile(e.dataTransfer.files[0]);
+  });
+
+  [biasIn, offIn].forEach(function(el){ el.addEventListener('input', schedule); });
+  [collarIn, frameIn].forEach(function(el){ el.addEventListener('change', schedule); });
+
+  dlBtn.addEventListener('click', function(){
+    if(!srcData) return;
+    var a = document.createElement('a');
+    a.download = 'inkbull-pfp.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  });
+
+  render();
 })();
 </script>
 </body>
